@@ -60,7 +60,7 @@ third_quartile_of_scores,45.0
 ### gf_enrichment/main.nf
 Performs exhaustive gene prediction using kakapo_round0 species configuration.
 Can be provided individual families, however for Kakapo we are using UniProt SWISS-PROT
-Current run-time > 1 week. *A more portable version of this is in development for general usage.*
+Current run-time > 2207 CPUhrs. *A more portable version of this is in development for general usage.*
 
 #### splitAssembly
 Splits the assembly into separate files for each contig/scaffold. This provides us with 100 FASTA files representing a scaffold or contig.
