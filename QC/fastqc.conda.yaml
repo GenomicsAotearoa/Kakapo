@@ -1,0 +1,8 @@
+name: fastqc
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - bioconda::fastqc
+  - conda-forge/label/gcc7::openjdk

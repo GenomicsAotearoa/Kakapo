@@ -27,7 +27,8 @@ spabbrev = params.species_abbrev
 // Really should have one here to split the assembly, to make it even more compatible and compact....
 
 process splitAssembly {
-  storeDir "./split_assembly"
+  cache true
+  storeDir "./splitAssembly"
   tag { "$assembly" }
 
   input: file assembly
@@ -42,9 +43,9 @@ process splitAssembly {
 // Generate augustus PPX profiles
 // Preprocess splits into families, based off of blastp + mcl
 process preprocessProteinFile {
-  storeDir "./preprocess_protein_file"
+  cache true
   tag { "${fam}" }
-  cpus 128
+  cpus 32
   cache true
   input:
     file fam from family
@@ -55,7 +56,7 @@ process preprocessProteinFile {
   script:
   """
   diamond makedb --in $fam --db db
-  diamond blastp --more-sensitive --threads 128 --query $fam --db db > self-blast.tsv
+  diamond blastp --more-sensitive --threads 32 --query $fam --db db > self-blast.tsv
   cut -f 1,2,12 self-blast.tsv > mcl_input
   mcl mcl_input --abc -I 2
   split -l 1 -a 10 out.mcl_input.I20 mcl_fams_
@@ -64,7 +65,8 @@ process preprocessProteinFile {
 
 // Once families are split into groups, split them, align them, and generate protein profiles
 process generateProteinFamilySequences {
-  storeDir "./protein_family_sequences"
+  cache true
+  storeDir "./protein_family_seq"
   tag { "${fam}" }
   cache false
   input:
@@ -83,10 +85,9 @@ process generateProteinFamilySequences {
 family_sequences.into{ family_sequences_unaligned; family_sequences_diamondsearch }
 
 process generateProteinProfiles {
-  storeDir "./protein_profiles"
   cache true
-  publishDir "./protein_profiles_final"
   cpus 16
+  storeDir "./proteinProfiles"
   tag { "${unaligned.baseName}" }
   errorStrategy 'ignore'
   input:
@@ -97,13 +98,8 @@ process generateProteinProfiles {
 
   """
   mafft --anysymbol --thread 16 --maxiterate 1000 --localpair --reorder $unaligned > ${unaligned.baseName}.aln
-  perl ${augpath}/scripts/msa2prfl.pl ${unaligned.baseName}.aln > ${unaligned.baseName}.prfl
-
-  if [ ! -s ${unaligned.baseName}.prfl ]
-  then
-    ${augpath}/bin/prepareAlign < ${unaligned.baseName}.aln > ${unaligned.baseName}.prepared.aln
-    perl ${augpath}/scripts/msa2prfl.pl ${unaligned.baseName}.prepared.aln > ${unaligned.baseName}.prfl
-  fi
+  ${augpath}/bin/prepareAlign < {$unaligned.baseName}.aln > {$unaligned.baseName}.prepared.aln
+  perl ${augpath}/scripts/msa2prfl.pl ${unaligned.baseName}.prepared.aln > ${unaligned.baseName}.prfl
 
   if [ ! -s ${unaligned.baseName}.prfl ]
   then
@@ -122,6 +118,8 @@ process genePrediction {
   tag { "${seq.baseName}-${prfl.baseName}" }
   publishDir "./predicted_genes_raw"
   errorStrategy 'ignore'
+  cache true
+  cpus 2
   input:
     each file(prfl) from protein_profiles.collect()
     file(seq) from datasets_blocksearch

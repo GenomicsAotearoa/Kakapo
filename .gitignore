@@ -22,3 +22,5 @@ s3/
 *.log
 **/.nextflow.log*
 **/*.pep
+**/output
+**/results
