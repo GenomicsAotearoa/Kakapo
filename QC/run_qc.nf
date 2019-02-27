@@ -33,10 +33,14 @@ process AdapterRemovalV2 {
   """
 }
 
-AdapterRemovalV2_output.set { flash_processing_raw }
+AdapterRemovalV2_output
+	.set { AdapterRemovalV2_output_qc }
+
+// FLASH is no longer used as it did not add anything to AdapterRemovalV2
+/* AdapterRemovalV2_output.set { flash_processing_raw }
 
 flash_processing_raw.map { [it[0].baseName, [it[0], it[1]]] }
-  .set{ flash_processing }
+  .set{ flash_processing }*/
 
 process FastQC {
   cache true
@@ -63,6 +67,7 @@ process FastQC {
   """
 }
 
+/*
 process FLASh {
   cache true
   cpus 8
@@ -91,20 +96,72 @@ process FLASh {
 //Channel.from(AdapterRemovalV2_qc.collect(), flash_qc.collect(), FastQC_qc.collect())
 //  .flatMap()
 //  .set { multiqc_first }
-
+*/
 process MultiQC_firstrun {
   cache true
   cpus 8
   tag { "$read_id" }
-  storeDir './output/store/MultiQC'
-  publishDir './results/MultiQC'
+  storeDir './output/store/MultiQC_1'
+  publishDir './results/MultiQC_1'
 
   conda 'python=3.6 bioconda::multiqc'
 
   input:
     file(arfiles) from AdapterRemovalV2_qc.collect()
-    file(flashfiles) from flash_qc.collect()
     file(fqc) from FastQC_qc.collect()
+
+  output:
+    file("multiqc_report.html")
+
+  """
+  multiqc -z .
+  """
+}
+
+AdapterRemovalV2_output_qc.map{ [it[0].baseName.tokenize('.')[0], it]  }
+	.set { AR2_output_qc2 }
+
+process FastQC_2 {
+  cache true
+  cpus 6
+  tag { "$read_id" }
+  storeDir './output/store/FastQC_2'
+  publishDir './results/FastQC_2'
+
+  conda 'fastqc.conda.yaml'
+
+  input:
+    set read_id, file(reads) from AR2_output_qc2
+
+  output:
+    file("${read_id}/*_fastqc.zip") into FastQC_2_qc
+
+  readid = {$reads[0].baseName.tokenize('.')}
+
+  """
+  mkdir ${read_id}
+  cat ${reads[0]} ${reads[1]} ${reads[2]} ${reads[3]} ${reads[4]} > ${read_id}.fastq
+
+  fastqc \
+    -o ${read_id} \
+    -t 6 \
+    --noextract \
+    ${read_id}.fastq
+  """
+}
+
+// QC of the trimmed/adapted sequences
+process MultiQC_secondrun {
+  cache true
+  cpus 8
+  tag { "$read_id" }
+  storeDir './output/store/MultiQC_2'
+  publishDir './results/MultiQC_2'
+
+  conda 'python=3.6 bioconda::multiqc'
+
+  input:
+    file(fqc) from FastQC_2_qc.collect()
 
   output:
     file("multiqc_report.html")
