@@ -51,8 +51,7 @@ process FastQC {
     set read_id, file(reads) from reads_fastqc
 
   output:
-    set file("${read_id}/${reads[0].baseName}_fastqc.zip"),
-        file("${read_id}/${reads[1].baseName}_fastqc.zip") into FastQC_qc
+    file("${read_id}/*_fastqc.zip") into FastQC_qc
 
   """
   mkdir ${read_id}
