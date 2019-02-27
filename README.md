@@ -12,7 +12,7 @@ Kakapo data is available through the DOC. This repository is for those with acce
 
 # Methods
 
-## Gene Annotation
+## Gene Prediction
 
 ### 0_mask.sh
 Uses Funannotate mask command to run RepeatModeler and RepeatMasker on the genome
