@@ -98,7 +98,7 @@ process generateProteinProfiles {
 
   """
   mafft --anysymbol --thread 16 --maxiterate 1000 --localpair --reorder $unaligned > ${unaligned.baseName}.aln
-  ${augpath}/bin/prepareAlign < {$unaligned.baseName}.aln > {$unaligned.baseName}.prepared.aln
+  ${augpath}/bin/prepareAlign < ${unaligned.baseName}.aln > ${unaligned.baseName}.prepared.aln
   perl ${augpath}/scripts/msa2prfl.pl ${unaligned.baseName}.prepared.aln > ${unaligned.baseName}.prfl
 
   if [ ! -s ${unaligned.baseName}.prfl ]
