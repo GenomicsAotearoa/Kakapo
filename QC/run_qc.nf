@@ -36,12 +36,6 @@ process AdapterRemovalV2 {
 AdapterRemovalV2_output
 	.set { AdapterRemovalV2_output_qc }
 
-// FLASH is no longer used as it did not add anything to AdapterRemovalV2
-/* AdapterRemovalV2_output.set { flash_processing_raw }
-
-flash_processing_raw.map { [it[0].baseName, [it[0], it[1]]] }
-  .set{ flash_processing }*/
-
 process FastQC {
   cache true
   cpus 6
@@ -67,36 +61,6 @@ process FastQC {
   """
 }
 
-/*
-process FLASh {
-  cache true
-  cpus 8
-  tag { "$read_id" }
-  storeDir './output/store/FLASH'
-  publishDir './results/FLASH'
-
-  conda 'bioconda::flash'
-
-  input:
-    set read_id, file(reads) from flash_processing
-
-  output:
-    set file("${read_id}.extendedFrags.fastq"),
-        file("${read_id}.notCombined_1.fastq"),
-        file("${read_id}.notCombined_2.fastq"),
-        file("${read_id}.hist"),
-        file("${read_id}.histogram")
-    file("${read_id}_flash.log") into flash_qc
-
-  """
-  flash -t 8 -o ${read_id} ${reads[0]} ${reads[1]} 2>&1 | tee ${read_id}_flash.log
-  """
-}
-
-//Channel.from(AdapterRemovalV2_qc.collect(), flash_qc.collect(), FastQC_qc.collect())
-//  .flatMap()
-//  .set { multiqc_first }
-*/
 process MultiQC_firstrun {
   cache true
   cpus 8
@@ -119,7 +83,7 @@ process MultiQC_firstrun {
 }
 
 AdapterRemovalV2_output_qc.map{ [it[0].baseName.tokenize('.')[0], it]  }
-	.set { AR2_output_qc2 }
+	.into { AR2_output_qc2; ConcatAndCompress }
 
 process FastQC_2 {
   cache true
@@ -168,5 +132,35 @@ process MultiQC_secondrun {
 
   """
   multiqc -z .
+  """
+}
+
+    set file("${read_id}.pair1.truncated"),
+        file("${read_id}.pair2.truncated"),
+        file("${read_id}.singleton.truncated"),
+        file("${read_id}.collapsed"),
+        file("${read_id}.collapsed.truncated"),
+        file("${read_id}.discarded") into AdapterRemovalV2_output
+    file("${read_id}.settings") into AdapterRemovalV2_qc
+
+// QC of the trimmed/adapted sequences
+process ConcatenateAndCompressReads {
+  cache true
+  cpus 2
+  tag { "$read_id" }
+  storeDir './output/store/ConcatAndCompress'
+  publishDir './results/ConcatAndCompress'
+
+  input:
+    set read_id, file(reads) from ConcatAndCompress
+
+  output:
+    file("*.gz")
+
+
+  """
+  cat ${reads[0]} | gzip --best > ${read_id}.r1.fq.gz
+  cat ${reads[1]} | gzip --best > ${read_id}.r2.fq.gz
+  cat ${reads[2]} ${reads[3]} ${reads[4]} | gzip --best > ${read_id}.s.fq.gz
   """
 }
