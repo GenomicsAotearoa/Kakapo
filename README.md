@@ -10,6 +10,11 @@ The Primary assembly is used in these scripts
 ## Other Data Availability
 Kakapo data is available through the DOC. This repository is for those with access to the data.
 
+## Quick Note
+**Many of the tools here may be moved to git submodules, as I am trying to make sure they are reusable as much as possible**
+NextFlow (the pipeline tool I am using) lets you work directly from git repos so they will likely be moving into their own in the near future.
+--Joseph
+
 # Methods
 
 ## Assembly_Procedures
