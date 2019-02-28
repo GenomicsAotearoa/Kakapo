@@ -19,12 +19,13 @@ reads_all.into{ reads_adapterremovalv2;
                 reads_fastqc }
 
 process AdapterRemovalV2 {
+  cpus 6
   cache true
   tag { "$read_id" }
   storeDir './output/store/AdapterRemovalV2_store'
   publishDir './results/AdapterRemovalV2'
 
-  conda 'maxibor::adapterremoval2'
+  conda 'maxibor::adapterremoval2 bioconda::fastp'
 
   input:
     set read_id, file(reads) from reads_adapterremovalv2
@@ -37,10 +38,15 @@ process AdapterRemovalV2 {
         file("${read_id}.collapsed"),
         file("${read_id}.collapsed.truncated"),
         file("${read_id}.discarded") into AdapterRemovalV2_output
-    file("${read_id}.settings") into AdapterRemovalV2_qc
+    set file("${read_id}.settings"),
+	file("${read_id}.fastp.html"),
+	file("${read_id}.fastp.json") into AdapterRemovalV2_qc
 
   """
-  AdapterRemoval --file1 ${reads[0]} --file2 ${reads[1]} --basename ${read_id} --trimns --trimqualities --collapse
+  fastp -i ${reads[0]} -I ${reads[1]} -o r1.fq.gz -O r2.fq.gz
+  AdapterRemoval --file1 r1.fq.gz --file2 r2.fq.gz --basename ${read_id} --trimns --trimqualities --collapse
+  mv fastp.html ${read_id}.fastp.html
+  mv fastp.json ${read_id}.fastp.json
   """
 }
 
@@ -148,6 +154,7 @@ process MultiQC_secondrun {
 process ConcatenateAndCompressReads {
   cache true
   cpus 2
+  maxForks 8
   tag { "$read_id" }
   storeDir './output/store/ConcatAndCompress'
   publishDir './results/ConcatAndCompress'
