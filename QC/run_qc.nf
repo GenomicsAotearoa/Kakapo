@@ -99,7 +99,7 @@ process MultiQC_firstrun {
 }
 
 AdapterRemovalV2_output_qc.map{ [it[0].baseName.tokenize('.')[0], it]  }
-	.into { AR2_output_qc2; ConcatAndCompress }
+	.into { AR2_output_qc2; ConcatAndCompress; KAT_analysis }
 
 process FastQC_2 {
   cache true
@@ -130,6 +130,32 @@ process FastQC_2 {
   """
 }
 
+process performKatAnalyses {
+  cache true
+  cpus 8
+  storeDir './output/store/KAT'
+  publishDir './results/KAT'
+
+  conda 'bioconda::kat'
+
+  input:
+    set read_id, file(reads) from KAT_analysis
+
+  output:
+    set file("${read_id}.dist_analysis.json"),
+        file("${read_id}.png")
+        into kat_results
+
+  """
+  kat hist -o ${read_id} \
+    -t 8 \
+    ${reads[0]} ${reads[1]} ${reads[2]} ${reads[3]} ${reads[4]}
+  kat gcp -o ${read_id} \
+    -t 8 \
+    ${reads[0]} ${reads[1]} ${reads[2]} ${reads[3]} ${reads[4]}
+  """
+}
+
 // QC of the trimmed/adapted sequences
 process MultiQC_secondrun {
   cache true
@@ -141,6 +167,7 @@ process MultiQC_secondrun {
 
   input:
     file(fqc) from FastQC_2_qc.collect()
+    file(kats) from KAT_analysis.collect()
 
   output:
     file("multiqc_report.html")
