@@ -91,7 +91,7 @@ process FastQC_2 {
   cpus 6
   tag { "$read_id" }
   storeDir './output/store/FastQC_2'
-  publishDir './results/FastQC_2'
+  publishDir './results/FastQC_2_PostProcess'
 
   conda 'fastqc.conda.yaml'
 
