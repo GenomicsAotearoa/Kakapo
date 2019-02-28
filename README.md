@@ -19,7 +19,7 @@ Masking, sorting, and initial gene prediction (not final)
 In QC Folder
 
 Adapter Trimming, base quality trimming, and merging performed with [AdapterRemovalV2](https://github.com/MikkelSchubert/adapterremoval). FastQC is run on both pre-processed (MultiQC_1) and post-processed (MultiQC_2).
-
+QC Results are/will be available on our [Google Drive](https://drive.google.com/open?id=1rKB0EycINaNLAhBBjduaOGPyt-RJrllz).
 
 
 ## Structural Variation
