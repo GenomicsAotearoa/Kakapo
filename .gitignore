@@ -24,3 +24,11 @@ s3/
 **/*.pep
 **/output
 **/results
+*.cram
+*.crai
+*.sam
+*.bam
+*.bai
+*.html
+*.vcf
+**/out
