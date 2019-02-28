@@ -1,5 +1,14 @@
 #!/usr/bin/env nextflow
 
+/*
+ * This script by Joseph Guhlin
+ * joseph.guhlin@gmail.com
+ * joseph.guhlin@otago.ac.nz
+ * github.com/jguhlin
+ * For internal use on the Kakapo Genome Project
+ * 2018 Feb 28
+ */
+
 Channel
 .fromFilePairs(['../../../kakapo_genome/raw/NZGL01983/*/Raw/*R{1,2}.fastq.gz',
  		            '../../../kakapo_genome/raw/NZGL02317/*fastq/*R{1,2}.fastq.gz',
