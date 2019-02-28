@@ -1,7 +1,9 @@
 #!/usr/bin/env nextflow
 
 Channel
-  .fromFilePairs('../../../kakapo_genome/raw/NZGL01983/NZGL01983_C9EP8ANXX/Raw/*R{1,2}.fastq.gz')
+.fromFilePairs(['../../../kakapo_genome/raw/NZGL01983/*/Raw/*R{1,2}.fastq.gz',
+ 		            '../../../kakapo_genome/raw/NZGL02317/*fastq/*R{1,2}.fastq.gz',
+ 		            '/Volumes/archive/deardenlab/guhlin/HQG/Kakapo/s3/raw/Genome.One.201805/*R{1,2}.fastq.gz'])
   .set { reads_all }
 
 reads_all.into{ reads_adapterremovalv2;
@@ -29,7 +31,7 @@ process AdapterRemovalV2 {
     file("${read_id}.settings") into AdapterRemovalV2_qc
 
   """
-  AdapterRemoval --file1 ${reads[0]} --file2 ${reads[1]} --basename ${read_id} --trimns --trimqualities
+  AdapterRemoval --file1 ${reads[0]} --file2 ${reads[1]} --basename ${read_id} --trimns --trimqualities --collapse
   """
 }
 
@@ -64,9 +66,8 @@ process FastQC {
 process MultiQC_firstrun {
   cache true
   cpus 8
-  tag { "$read_id" }
   storeDir './output/store/MultiQC_1'
-  publishDir './results/MultiQC_1'
+  publishDir './results/MultiQC_1_PreProcess'
 
   conda 'python=3.6 bioconda::multiqc'
 
@@ -118,9 +119,8 @@ process FastQC_2 {
 process MultiQC_secondrun {
   cache true
   cpus 8
-  tag { "$read_id" }
   storeDir './output/store/MultiQC_2'
-  publishDir './results/MultiQC_2'
+  publishDir './results/MultiQC_2_PostProcess'
 
   conda 'python=3.6 bioconda::multiqc'
 
@@ -134,14 +134,6 @@ process MultiQC_secondrun {
   multiqc -z .
   """
 }
-
-    set file("${read_id}.pair1.truncated"),
-        file("${read_id}.pair2.truncated"),
-        file("${read_id}.singleton.truncated"),
-        file("${read_id}.collapsed"),
-        file("${read_id}.collapsed.truncated"),
-        file("${read_id}.discarded") into AdapterRemovalV2_output
-    file("${read_id}.settings") into AdapterRemovalV2_qc
 
 // QC of the trimmed/adapted sequences
 process ConcatenateAndCompressReads {
