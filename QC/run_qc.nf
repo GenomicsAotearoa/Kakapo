@@ -3,7 +3,7 @@
 Channel
 .fromFilePairs(['../../../kakapo_genome/raw/NZGL01983/*/Raw/*R{1,2}.fastq.gz',
  		            '../../../kakapo_genome/raw/NZGL02317/*fastq/*R{1,2}.fastq.gz',
- 		            '/Volumes/archive/deardenlab/guhlin/HQG/Kakapo/s3/raw/Genome.One.201805/*R{1,2}.fastq.gz'])
+			    '/Volumes/archive/deardenlab/HTS raw sequencing reads/kakapo-genomes/Genome.One.201805/*R{1,2}.fastq.gz'])
   .set { reads_all }
 
 reads_all.into{ reads_adapterremovalv2;
