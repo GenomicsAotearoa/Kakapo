@@ -11,7 +11,7 @@
 
 Channel
 .fromFilePairs(['../../../kakapo_genome/raw/NZGL01983/*/Raw/*R{1,2}.fastq.gz',
- 		            '../../../kakapo_genome/raw/NZGL02317/*fastq/*R{1,2}.fastq.gz',
+			    '../../../kakapo_genome/raw/NZGL02317/*fastq/*R1*.fastq.gz',
 			    '/Volumes/archive/deardenlab/HTS raw sequencing reads/kakapo-genomes/Genome.One.201805/*R{1,2}.fastq.gz'])
   .set { reads_all }
 
@@ -79,9 +79,8 @@ process FastQC {
 }
 
 process MultiQC_firstrun {
-  cache true
+  cache false
   cpus 8
-  storeDir './output/store/MultiQC_1'
   publishDir './results/MultiQC_1_PreProcess'
 
   conda 'python=3.6 bioconda::multiqc'
@@ -143,8 +142,7 @@ process performKatAnalyses {
 
   output:
     set file("${read_id}.dist_analysis.json"),
-        file("${read_id}.png")
-        into kat_results
+        file("${read_id}.png") into KAT_results
 
   """
   kat hist -o ${read_id} \
@@ -158,16 +156,15 @@ process performKatAnalyses {
 
 // QC of the trimmed/adapted sequences
 process MultiQC_secondrun {
-  cache true
+  cache false
   cpus 8
-  storeDir './output/store/MultiQC_2'
   publishDir './results/MultiQC_2_PostProcess'
 
   conda 'python=3.6 bioconda::multiqc'
 
   input:
     file(fqc) from FastQC_2_qc.collect()
-    file(kats) from KAT_analysis.collect()
+    file(kats) from KAT_results.collect()
 
   output:
     file("multiqc_report.html")
