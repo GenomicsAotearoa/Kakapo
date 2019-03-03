@@ -83,7 +83,7 @@ process FastQC {
 }
 
 process MultiQC_firstrun {
-  cache false
+  cache true
   cpus 12
   publishDir './results/MultiQC_1_PreProcess'
 
@@ -160,7 +160,7 @@ process FastQC_2 {
 
 // QC of the trimmed/adapted sequences
 process MultiQC_secondrun {
-  cache false
+  cache true
   cpus 12
   publishDir './results/MultiQC_2_PostProcess'
 
@@ -181,8 +181,8 @@ process MultiQC_secondrun {
 // QC of the trimmed/adapted sequences
 process ConcatenateAndCompressReads {
   cache false
-  cpus 6
-  maxForks 12
+  cpus 16
+  maxForks 4
   tag { "$read_id" }
   storeDir './output/store/ConcatAndCompress'
   publishDir './results/ConcatAndCompress'
@@ -191,13 +191,15 @@ process ConcatenateAndCompressReads {
     set read_id, file(reads) from ConcatAndCompress
 
   output:
-    file("*.gz") into ConcatOut
+    set file("${read_id}.r1.fq.gz"),
+		    file("${read_id}.r2.fq.gz"),
+				file("${read_id}.s.fq.gz") into ConcatOut
 
 
   """
-  cat ${reads[0]} | gzip --best > ${read_id}.r1.fq.gz
-  cat ${reads[1]} | gzip --best > ${read_id}.r2.fq.gz
-  cat ${reads[2]} ${reads[3]} ${reads[4]} | gzip --best > ${read_id}.s.fq.gz
+  cat ${reads[0]} | pigz --best -b 2048 -p 16 > ${read_id}.r1.fq.gz
+  cat ${reads[1]} | pigz --best -b 2048 -p 16 > ${read_id}.r2.fq.gz
+  cat ${reads[2]} ${reads[3]} ${reads[4]} | pigz --best -b 2048 -p 16 > ${read_id}.s.fq.gz
   """
 }
 
