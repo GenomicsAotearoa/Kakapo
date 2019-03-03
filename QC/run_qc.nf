@@ -200,3 +200,5 @@ process ConcatenateAndCompressReads {
   cat ${reads[2]} ${reads[3]} ${reads[4]} | gzip --best > ${read_id}.s.fq.gz
   """
 }
+
+ConcatOut.collect()
