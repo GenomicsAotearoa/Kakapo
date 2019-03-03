@@ -9,17 +9,21 @@
  * 2018 Feb 28
  */
 
+
+// ['../../../kakapo_genome/raw/NZGL01983/*/Raw/*R{1,2}.fastq.gz',
+//                            '../../../kakapo_genome/raw/NZGL02317/*fastq/*R1*.fastq.gz',
+//                           '/Volumes/archive/deardenlab/HTS raw sequencing reads/kakapo-genomes/Genome.One.201805/*R{1,2}.fastq.gz'])
+
+
 Channel
-.fromFilePairs(['../../../kakapo_genome/raw/NZGL01983/*/Raw/*R{1,2}.fastq.gz',
-			    '../../../kakapo_genome/raw/NZGL02317/*fastq/*R1*.fastq.gz',
-			    '/Volumes/archive/deardenlab/HTS raw sequencing reads/kakapo-genomes/Genome.One.201805/*R{1,2}.fastq.gz'])
-  .set { reads_all }
+.fromFilePairs('reads/*R{1,2}*.fastq.gz')
+	.set { reads_all }
 
 reads_all.into{ reads_adapterremovalv2;
                 reads_fastqc }
 
 process AdapterRemovalV2 {
-  cpus 6
+  cpus 8
   cache true
   tag { "$read_id" }
   storeDir './output/store/AdapterRemovalV2_store'
@@ -55,7 +59,7 @@ AdapterRemovalV2_output
 
 process FastQC {
   cache true
-  cpus 6
+  cpus 8
   tag { "$read_id" }
   storeDir './output/store/FastQC'
   publishDir './results/FastQC'
@@ -80,7 +84,7 @@ process FastQC {
 
 process MultiQC_firstrun {
   cache false
-  cpus 8
+  cpus 12
   publishDir './results/MultiQC_1_PreProcess'
 
   conda 'python=3.6 bioconda::multiqc'
@@ -102,7 +106,7 @@ AdapterRemovalV2_output_qc.map{ [it[0].baseName.tokenize('.')[0], it]  }
 
 process FastQC_2 {
   cache true
-  cpus 6
+  cpus 12
   tag { "$read_id" }
   storeDir './output/store/FastQC_2'
   publishDir './results/FastQC_2_PostProcess'
@@ -129,9 +133,9 @@ process FastQC_2 {
   """
 }
 
-process performKatAnalyses {
+/*process performKatAnalyses {
   cache true
-  cpus 8
+  cpus 12
   storeDir './output/store/KAT'
   publishDir './results/KAT'
 
@@ -152,19 +156,19 @@ process performKatAnalyses {
     -t 8 \
     ${reads[0]} ${reads[1]} ${reads[2]} ${reads[3]} ${reads[4]}
   """
-}
+}*/
 
 // QC of the trimmed/adapted sequences
 process MultiQC_secondrun {
   cache false
-  cpus 8
+  cpus 12
   publishDir './results/MultiQC_2_PostProcess'
 
   conda 'python=3.6 bioconda::multiqc'
 
   input:
     file(fqc) from FastQC_2_qc.collect()
-    file(kats) from KAT_results.collect()
+//    file(kats) from KAT_results.collect()
 
   output:
     file("multiqc_report.html")
@@ -176,9 +180,9 @@ process MultiQC_secondrun {
 
 // QC of the trimmed/adapted sequences
 process ConcatenateAndCompressReads {
-  cache true
-  cpus 2
-  maxForks 8
+  cache false
+  cpus 6
+  maxForks 12
   tag { "$read_id" }
   storeDir './output/store/ConcatAndCompress'
   publishDir './results/ConcatAndCompress'
@@ -187,7 +191,7 @@ process ConcatenateAndCompressReads {
     set read_id, file(reads) from ConcatAndCompress
 
   output:
-    file("*.gz")
+    file("*.gz") into ConcatOut
 
 
   """
