@@ -1,0 +1,3 @@
+Module	Section	Sample Name	Source
+Samtools	stats	L005	/Volumes/archive/deardenlab/guhlin/HQG/Kakapo/SNPs/L005.stats
+Samtools	flagstat	L005	/Volumes/archive/deardenlab/guhlin/HQG/Kakapo/SNPs/L005.flagstats

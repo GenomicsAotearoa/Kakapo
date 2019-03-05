@@ -32,3 +32,17 @@ s3/
 *.html
 *.vcf
 **/out
+**/*.gz
+**/reads
+*pep
+*fasta
+**/spades
+**.amb
+**.ann
+**.bwt
+**.fai
+**.pac
+**.sa
+**/*html*
+**/*trace*
+previous/*
