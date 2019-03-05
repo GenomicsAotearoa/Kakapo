@@ -46,3 +46,4 @@ s3/
 **/*html*
 **/*trace*
 previous/*
+**/*.fq.gz
