@@ -67,7 +67,7 @@ process mapReads {
     --threads 16 \
     \$NAME.cram > \$NAME.stats
 
-  samtools flagstats \
+  samtools flagstat \
     --threads 16 \
     \$NAME.cram > \$NAME.flagstats
 
