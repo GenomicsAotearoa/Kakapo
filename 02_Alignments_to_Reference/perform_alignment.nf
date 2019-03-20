@@ -45,7 +45,7 @@ process mapReads {
   bwa mem -t 16 $assembly \
     ${reads[2]} | samtools view -T $assembly -C - > out.single.cram
 
-  eval `scripts/discern_ids.pl $baseDir/SeqIDs_to_name.tsv ${reads[0]}`
+  eval `perl $baseDir/scripts/discern_ids.pl $baseDir/SeqIDs_to_name.tsv ${reads[0]}`
 
   samtools merge --reference $assembly \
     -O CRAM \
@@ -57,7 +57,6 @@ process mapReads {
   samtools addreplacerg -r ID:\$NAME_\$LANE \
     -r SM:\$NAME \
     --reference $assembly --threads 16 |
-
   samtools sort --reference $assembly \
       --threads 16 \
       -O CRAM -l 9 -m 8G -o \$NAME.cram
