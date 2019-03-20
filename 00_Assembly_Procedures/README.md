@@ -1,5 +1,8 @@
 ## Assembly Management
 
+*Looks like the published genome is already masked, so this may be unnecessary*
+Continuing just in case we want to do an analysis of repeats within the population though.
+
 Using the new(er) NCBI published assembly with chromosome names. Using funannotate to repeat mask.
 Funannotate must be installed to re-run.
 
