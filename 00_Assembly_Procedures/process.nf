@@ -1,4 +1,14 @@
 
+// Funannotate
+// version:     1.5.1-439a664
+//
+// RepeatMasker
+// #    Revision 1.331  2017/02/01 21:01:55  rhubley
+//
+// RepeatModeler
+// open-1.0.11
+//
+
 // This script replaces the previous scripts....
 params.reference = "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/004/027/225/GCA_004027225.1_bStrHab1_v1.p/GCA_004027225.1_bStrHab1_v1.p_genomic.fna.gz"
 
