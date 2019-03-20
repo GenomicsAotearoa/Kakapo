@@ -1,5 +1,12 @@
 ## Assembly Management
 
+Using the new(er) NCBI published assembly with chromosome names. Using funannotate to repeat mask.
+Funannotate must be installed to re-run.
+
+nextflow process.nf
+
+## Previous files
+
 ### 0_mask.sh
 Uses Funannotate mask command to run RepeatModeler and RepeatMasker on the genome
 

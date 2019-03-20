@@ -1,5 +1,6 @@
 **/.nextflow
 **/work
+**/store
 **/*.fasta
 **/*.fa
 **/*.aa
@@ -47,3 +48,4 @@ s3/
 **/*trace*
 previous/*
 **/*.fq.gz
+**/*dmnd
