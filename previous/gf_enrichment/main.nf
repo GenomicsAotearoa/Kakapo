@@ -12,9 +12,9 @@
 
 */
 
-params.family = "$baseDir/../uniprot_sprot.fasta"
+params.family = "$baseDir/../../uniprot_sprot.fasta"
 params.family_name = "RefSeq"
-params.assembly = "$baseDir/../primary.masked.sorted.fasta"
+params.assembly = "$baseDir/../../primary.masked.sorted.fasta"
 params.augustus_path = "/Volumes/archive/deardenlab/guhlin/software/augustus-3.3.2/"
 params.species_abbrev = "Kakapo"
 

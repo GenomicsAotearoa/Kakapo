@@ -1,6 +1,9 @@
 **/.nextflow
 **/work
 **/store
+**/results
+**/downloaded
+**/masked
 **/*.fasta
 **/*.fa
 **/*.aa

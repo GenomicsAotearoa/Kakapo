@@ -5,14 +5,31 @@
  * joseph.guhlin@gmail.com
  * joseph.guhlin@otago.ac.nz
  * github.com/jguhlin
- * For internal use on the Kakapo Genome Project
+ * For internal use on the Kakapo Genome Resequencing Project / Genomics Aotearoa
  * 2018 Feb 28
  */
 
 
 // Get everything to have a decent name FIRST
 
-// After renaming...
+Channel
+.fromFilePairs('reads/*{r1,r2,s}*.fq.gz', size: 3)
+	.set { reads_all }
+
+process addNames {
+  cpus 1
+
+  input:
+    set read_id, file(reads) from reads_all
+
+  output:
+    set new_id, lane, ${reads[0]}, ${reads[1]}, ${reads[2]}
+
+  """
+  
+  """
+
+}
 
 process mapReads {
   tag { "${reads_id}" }
