@@ -53,7 +53,7 @@ process mapReads {
     merged.cram \
     out.paired.cram out.single.cram
 
-  samtools view --threads 16 -hT merged.cram |
+  samtools view --threads 16 -hT $assembly merged.cram |
   samtools addreplacerg -r ID:\$NAME_\$LANE \
     -r SM:\$NAME \
     --reference $assembly --threads 16 |
@@ -67,7 +67,7 @@ process mapReads {
     --threads 16 \
     \$NAME.cram > \$NAME.stats
 
-  samtools flagstats --reference $assembly \
+  samtools flagstats \
     --threads 16 \
     \$NAME.cram > \$NAME.flagstats
 
