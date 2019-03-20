@@ -1,11 +1,12 @@
 #!/usr/bin/env nextflow
 
+
 /*
  * This script by Joseph Guhlin
  * joseph.guhlin@gmail.com
  * joseph.guhlin@otago.ac.nz
  * github.com/jguhlin
- * For internal use on the Kakapo Genome Project
+ * For internal use on the Kakapo Genome Resequencing Project / Genomics Aotearoa
  * 2018 Feb 28
  */
 
