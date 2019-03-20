@@ -6,7 +6,7 @@
  * joseph.guhlin@otago.ac.nz
  * github.com/jguhlin
  * For internal use on the Kakapo Genome Resequencing Project / Genomics Aotearoa
- * 2019 Feb 28
+ * 2018 Feb 28
  */
 
 // Get everything to have a decent name FIRST
@@ -17,8 +17,10 @@ Channel
 .fromFilePairs('reads/*{r1,r2,s}*.fq.gz', size: 3)
 	.set { reads_all }
 
+// Genome must be already bwa indexed
+
 process mapReads {
-  tag { "${reads_id}" }
+  tag { "${read_id}" }
   cpus 16
   conda 'bioconda::bwa bioconda::samtools'
   storeDir './store/alignments/'
@@ -28,8 +30,8 @@ process mapReads {
   // reads[2] are singles
 
   input:
-    set read_id, file(reads) from reads_all
     assembly
+    set read_id, file(reads) from reads_all
 
   output:
     set file("*.cram"), file("*.cram.crai") into alignments
@@ -40,7 +42,7 @@ process mapReads {
   """
   bwa mem -t 16 $assembly \
     ${reads[0]} ${reads[1]} | samtools view -T $assembly -C - > out.paired.cram
-  bwa mem -t 16 $assembly
+  bwa mem -t 16 $assembly \
     ${reads[2]} | samtools view -T $assembly -C - > out.single.cram
 
   eval `scripts/discern_ids.pl $baseDir/SeqIDs_to_name.tsv ${reads[0]}`
@@ -55,9 +57,11 @@ process mapReads {
   samtools addreplacerg -r ID:\$NAME_\$LANE \
     -r SM:\$NAME \
     --reference $assembly --threads 16 |
+
   samtools sort --reference $assembly \
       --threads 16 \
       -O CRAM -l 9 -m 8G -o \$NAME.cram
+
   samtools index \$NAME.cram
 
   samtools stats --reference $assembly \
