@@ -21,9 +21,9 @@ Channel
 
 process mapReads {
   tag { "${read_id}" }
-  cpus 16
+  cpus 32
   conda 'bioconda::bwa bioconda::samtools'
-  storeDir './store/alignments/'
+//  storeDir './store/alignments/'
   publishDir './results/alignments/'
 
   // reads[0] reads[1] paired end
@@ -40,40 +40,45 @@ process mapReads {
   // At the end we also gather up statistics for a MultiQC report
 
   """
-  bwa mem -t 16 $assembly \
+  bwa mem -t 32 $assembly \
     ${reads[0]} ${reads[1]} | samtools view -T $assembly -C - > out.paired.cram
-  bwa mem -t 16 $assembly \
+  bwa mem -t 32 $assembly \
     ${reads[2]} | samtools view -T $assembly -C - > out.single.cram
 
   eval `perl $baseDir/scripts/discern_ids.pl $baseDir/SeqIDs_to_name.tsv ${reads[0]}`
 
   samtools merge --reference $assembly \
     -O CRAM \
-    --threads 16 \
+    --threads 32 \
     merged.cram \
     out.paired.cram out.single.cram
 
-  samtools view --threads 16 -hT $assembly merged.cram |
-  samtools addreplacerg -r ID:\$NAME_\$LANE \
+  samtools view --threads 32 -hT $assembly merged.cram |
+  samtools addreplacerg -r ID:\${NAME}_\${LANE} \
     -r SM:\$NAME \
-    --reference $assembly --threads 16 |
+    --reference $assembly --threads 32 - |
   samtools sort --reference $assembly \
-      --threads 16 \
-      -O CRAM -l 9 -m 8G -o \$NAME.cram
+      --threads 32 \
+      -O CRAM -l 9 -m 8G -o \$NAME.cram -
 
   samtools index \$NAME.cram
 
   samtools stats --reference $assembly \
-    --threads 16 \
+    --threads 32 \
     \$NAME.cram > \$NAME.stats
 
   samtools flagstat \
-    --threads 16 \
+    --threads 32 \
     \$NAME.cram > \$NAME.flagstats
 
   samtools idxstats \
-    --threads 16 \
+    --threads 32 \
     \$NAME.cram > \$NAME.idxstats
+
+  mv merged.cram merged.cram.intermediate
+  mv out.paired.cram out.paired.cram.intermediate
+  mv out.single.cram out.single.cram.intermediate
+
   """
 }
 
