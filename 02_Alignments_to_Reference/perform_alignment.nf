@@ -11,7 +11,7 @@
 
 // Get everything to have a decent name FIRST
 
-assembly = file("/Volumes/archive/deardenlab/guhlin/HQG/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
+assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
 
 Channel
 .fromFilePairs('reads/*{r1,r2,s}*.fq.gz', size: 3)
