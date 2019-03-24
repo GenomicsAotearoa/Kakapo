@@ -61,7 +61,7 @@ process mapReads {
     --reference $assembly --threads 32 - |
   samtools sort --reference $assembly \
       --threads 32 \
-      -O CRAM -l 9 -m 16G -o \${NAME}_\${LANE} -
+      -O CRAM -l 9 -o \${NAME}_\${LANE}.cram -
 
   samtools index \${NAME}_\${LANE}.cram
 
