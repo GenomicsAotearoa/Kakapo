@@ -67,15 +67,15 @@ process mapReads {
 
   samtools stats --reference $assembly \
     --threads 32 \
-    \$NAME.cram > \${NAME}_\${LANE}.stats
+    \$NAME_\${LANE}.cram > \${NAME}_\${LANE}.stats
 
   samtools flagstat \
     --threads 32 \
-    \$NAME.cram > \${NAME}_\${LANE}.flagstats
+    \$NAME_\${LANE}.cram > \${NAME}_\${LANE}.flagstats
 
   samtools idxstats \
     --threads 32 \
-    \$NAME.cram > \${NAME}_\${LANE}.idxstats
+    \$NAME_\${LANE}.cram > \${NAME}_\${LANE}.idxstats
 
   mv merged.cram merged.cram.intermediate
   mv out.paired.cram out.paired.cram.intermediate
