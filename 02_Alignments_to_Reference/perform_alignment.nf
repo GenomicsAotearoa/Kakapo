@@ -6,10 +6,9 @@
  * joseph.guhlin@otago.ac.nz
  * github.com/jguhlin
  * For internal use on the Kakapo Genome Resequencing Project / Genomics Aotearoa
- * 2018 Feb 28
+ * 2019 28 Feb - Header added
+ * 2019 25 March - Convert to SLURM for NeSI
  */
-
-// Get everything to have a decent name FIRST
 
 assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
 
@@ -22,6 +21,9 @@ Channel
 process mapReads {
   tag { "${read_id}" }
   cpus 32
+  queue 'prepost'
+  time '3h'
+  memory '48 GB'
   conda 'bioconda::bwa bioconda::samtools'
 //  storeDir './store/alignments/'
   publishDir './results/alignments/'
@@ -59,7 +61,7 @@ process mapReads {
     --reference $assembly --threads 32 - |
   samtools sort --reference $assembly \
       --threads 32 \
-      -O CRAM -l 9 -m 8G -o \${NAME}_\${LANE} -
+      -O CRAM -l 9 -m 16G -o \${NAME}_\${LANE} -
 
   samtools index \${NAME}_\${LANE}.cram
 
@@ -91,6 +93,9 @@ multiqc_stats.collect()
 process MultiQcStats {
   cpus 8
   cache false
+  queue 'large'
+  memory '16 GB'
+  time '12 h'
   publishDir './results/MultiQC_Aligned'
 
   conda 'python=3.6 bioconda::multiqc'
