@@ -21,8 +21,9 @@ Channel
 process mapReads {
   tag { "${read_id}" }
   cpus 32
-  queue 'prepost'
-  time '3h'
+  cache true
+  queue 'large'
+  time '6h'
   memory '48 GB'
   conda 'bioconda::bwa bioconda::samtools'
 //  storeDir './store/alignments/'
@@ -67,15 +68,15 @@ process mapReads {
 
   samtools stats --reference $assembly \
     --threads 32 \
-    \$NAME_\${LANE}.cram > \${NAME}_\${LANE}.stats
+    \${NAME}_\${LANE}.cram > \${NAME}_\${LANE}.stats
 
   samtools flagstat \
     --threads 32 \
-    \$NAME_\${LANE}.cram > \${NAME}_\${LANE}.flagstats
+    \${NAME}_\${LANE}.cram > \${NAME}_\${LANE}.flagstats
 
   samtools idxstats \
     --threads 32 \
-    \$NAME_\${LANE}.cram > \${NAME}_\${LANE}.idxstats
+    \${NAME}_\${LANE}.cram > \${NAME}_\${LANE}.idxstats
 
   mv merged.cram merged.cram.intermediate
   mv out.paired.cram out.paired.cram.intermediate
