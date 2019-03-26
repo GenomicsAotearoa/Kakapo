@@ -106,9 +106,10 @@ process MultiQcStats {
 
   output:
     file("multiqc_report.html")
+    file("multiqc_data.zip")
 
   """
-  multiqc -z .
+  multiqc -z --interactive .
   """
 
 }
