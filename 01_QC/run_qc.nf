@@ -84,11 +84,11 @@ process FastQC {
 }
 
 process MultiQC_firstrun {
-  cache true
+  cache false
   cpus 12
-  publishDir './results/MultiQC_1_PreProcess'
+  publishDir './results/MultiQC_1_PreProcess', mode: 'copy'
 
-  conda 'python=3.6 bioconda::multiqc'
+  conda 'bioconda::multiqc'
 
   input:
     file(arfiles) from AdapterRemovalV2_qc.collect()
@@ -96,6 +96,7 @@ process MultiQC_firstrun {
 
   output:
     file("multiqc_report.html")
+    file("multiqc_data.zip")
 
   """
   multiqc -z .
@@ -161,11 +162,11 @@ process FastQC_2 {
 
 // QC of the trimmed/adapted sequences
 process MultiQC_secondrun {
-  cache true
+  cache false
   cpus 12
   publishDir './results/MultiQC_2_PostProcess'
 
-  conda 'python=3.6 bioconda::multiqc'
+  conda 'bioconda::multiqc'
 
   input:
     file(fqc) from FastQC_2_qc.collect()
@@ -173,6 +174,7 @@ process MultiQC_secondrun {
 
   output:
     file("multiqc_report.html")
+    file("multiqc_data.zip")
 
   """
   multiqc -z .
@@ -181,7 +183,7 @@ process MultiQC_secondrun {
 
 // QC of the trimmed/adapted sequences
 process ConcatenateAndCompressReads {
-  cache false
+  cache true
   cpus 16
   maxForks 4
   tag { "$read_id" }
