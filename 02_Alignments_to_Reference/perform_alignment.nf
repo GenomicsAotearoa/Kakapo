@@ -99,10 +99,10 @@ process MultiQcStats {
   time '12 h'
   publishDir './results/MultiQC_Aligned'
 
-  conda 'python=3.6 bioconda::multiqc'
+  conda 'bioconda::multiqc'
 
   input:
-    file("stats") from multi_qc_stats
+    file('*') from multi_qc_stats
 
   output:
     file("multiqc_report.html")
