@@ -57,26 +57,26 @@ process mapReads {
     out.paired.cram out.single.cram
 
   samtools view --threads 32 -hT $assembly merged.cram |
-  samtools addreplacerg -r ID:\${NAME}_\${LANE} \
-    -r SM:\$NAME \
+  samtools addreplacerg -r "ID:\${NAME}_\${LANE}" \
+    -r "SM:\$NAME" \
     --reference $assembly --threads 32 - |
   samtools sort --reference $assembly \
       --threads 32 \
-      -O CRAM -l 9 -o \${NAME}_\${LANE}.cram -
+      -O CRAM -l 9 -o "\${NAME}_\${LANE}".cram -
 
-  samtools index \${NAME}_\${LANE}.cram
+  samtools index "\${NAME}_\${LANE}".cram
 
   samtools stats --reference $assembly \
     --threads 32 \
-    \${NAME}_\${LANE}.cram > \${NAME}_\${LANE}.stats
+    "\${NAME}_\${LANE}".cram > "\${NAME}_\${LANE}".stats
 
   samtools flagstat \
     --threads 32 \
-    \${NAME}_\${LANE}.cram > \${NAME}_\${LANE}.flagstats
+    "\${NAME}_\${LANE}".cram > "\${NAME}_\${LANE}".flagstats
 
   samtools idxstats \
     --threads 32 \
-    \${NAME}_\${LANE}.cram > \${NAME}_\${LANE}.idxstats
+    "\${NAME}_\${LANE}".cram > "\${NAME}_\${LANE}".idxstats
 
   mv merged.cram merged.cram.intermediate
   mv out.paired.cram out.paired.cram.intermediate
