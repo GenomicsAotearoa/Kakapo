@@ -29,8 +29,8 @@ process combineReads {
 		-O cram \
 		--threads 2 \
 		"${read_id}.cram" \
-		"${read_id}"_*.cram
-	samtools index "${read_id}.cram"
+		*.cram
+	samtools index "${read_id}".cram
 	"""
 	
 }
