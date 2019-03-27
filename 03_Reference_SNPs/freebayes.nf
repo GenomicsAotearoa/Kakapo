@@ -34,11 +34,11 @@ process calculateRegions {
 regions
 	.collect()
 	.splitText()
-	.map { it[0].trim() }
+	.map { [it[0].replaceAll(":", "_"), it[0].trim()] }
 	.set { regions_processed }
 
 process FreeBayes {
-	tag { "FreeBayes ${region}" }
+	tag { "FreeBayes ${region_name}" }
 	cpus 6
 	cache true
 	queue 'large'
@@ -50,10 +50,10 @@ process FreeBayes {
 	input:
 		assembly
 		// reads_all
-		val(region) from regions_processed
+		set val(region_name), val(region) from regions_processed
 
 	output:
-		file("${region}.vcf")
+		file("${region_name}.vcf")
 
 	"""
 	freebayes \
@@ -61,7 +61,7 @@ process FreeBayes {
 		--haplotype-length 100 \
 		--region ${region} \
 		-m 5 \
-		${cram_location} > ${region}.vcf
+		${cram_location} > ${region_name}.vcf
 	"""
 	
 }
