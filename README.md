@@ -17,18 +17,24 @@ NextFlow (the pipeline tool I am using) lets you work directly from git repos so
 
 # Methods
 
-## Assembly_Procedures
-Masking, sorting, and initial gene prediction (not final)
+## 00_Assembly_Procedures
+Downloads the assembly. Assembly from NCBI is already masked, although we may want to identify repeats for use in the publication.
 
-## QC & Adapter Trimming
+## 01_QC: QC & Adapter Trimming
 In QC Folder
 
-Adapter Trimming, base quality trimming, and merging performed with [AdapterRemovalV2](https://github.com/MikkelSchubert/adapterremoval). FastQC is run on both pre-processed (MultiQC_1) and post-processed (MultiQC_2).
-QC Results are/will be available on our [Google Drive](https://drive.google.com/open?id=1rKB0EycINaNLAhBBjduaOGPyt-RJrllz).
+Adapter Trimming, base quality trimming, and merging performed FASTP and with [AdapterRemovalV2](https://github.com/MikkelSchubert/adapterremoval). FastQC is run on both pre-processed (MultiQC_1) and post-processed (MultiQC_2).
+QC Results are be available on [Google Drive](https://drive.google.com/open?id=1rKB0EycINaNLAhBBjduaOGPyt-RJrllz). Right click and select "Download" then open the downloaded file.
+
+## 02_Alignments_to_Reference
+BWA Mapping to align each lane of sequencing to the reference genome. Samples are renamed to the bird name + lane number. MultiQC report generated for alignment statistics is available on Google Drive.
+
+## 03_Reference_SNPs
+FreeBayes, DeepVariant, and ... one more.
 
 
-## Structural Variation
-### ChrZ --> for a specific group
+## 10_de_novo_assemblies
+Early stages of testing....
 
 ## Other Analyses
 TBD
