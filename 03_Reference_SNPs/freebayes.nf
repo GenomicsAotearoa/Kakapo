@@ -34,7 +34,7 @@ process calculateRegions {
 regions
 	.collect()
 	.splitText()
-	.map { [it[0].replaceAll(":", "_"), it[0].trim()] }
+	.map { [it[0].trim().replaceAll(":", "_"), it[0].trim()] }
 	.set { regions_processed }
 
 process FreeBayes {
