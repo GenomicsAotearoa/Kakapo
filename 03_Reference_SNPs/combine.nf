@@ -21,7 +21,7 @@ process combineReads {
 		set read_id, file(reads) from reads_all
 
 	output:
-		set file("${read_id}.cram"), file("${read_id}.crai")
+		set file("${read_id}.cram"), file("${read_id}.cram.crai")
 
 	"""
 	samtools merge \
