@@ -26,7 +26,7 @@ process calculateRegions {
 		stdout regions
 
 	"""
-	fasta_generate_regions.py ${assembly} 1000000
+	fasta_generate_regions.py ${assembly} 100000
 	"""
 	
 }
@@ -39,11 +39,11 @@ regions
 
 process FreeBayes {
 	tag { "FreeBayes ${region_name}" }
-	cpus 6
+	cpus 1
 	cache true
 	queue 'large'
 	time '48h'
-	memory '30000 MB'
+	memory '5000 MB'
 	conda 'bioconda::freebayes'
 	publishDir './freebayes-regions/'
 
