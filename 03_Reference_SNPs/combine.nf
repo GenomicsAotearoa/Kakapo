@@ -11,8 +11,8 @@ process combineReads {
 	cpus 2
 	cache true
 	queue 'prepost'
-	time '3h'
-	memory '6800 MB'
+	time '2h'
+	memory '6000 MB'
 	conda 'bioconda::samtools'
 	publishDir './alignments/'
 
