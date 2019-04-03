@@ -4,7 +4,7 @@ Channel
 	.fromFilePairs("alignments-separate/*_00{1,2,3,4,5,6,7,8,9}.cram", size: -1)
 	.set { reads_all }
 
-assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
+assembly = file("$baseDir/../00_Assembly_Procedures/store/downloaded/assembly.fasta")
 
 process combineReads {
 	tag { "${read_id}" }
