@@ -5,9 +5,10 @@
 	.set { reads_all }
 
 reads_all.subscribe { println it }*/
-cram_location = "/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/alignments/*.cram"
+cram_location = "$baseDir/alignments/*.cram"
 
-assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
+assembly = file("$baseDir/../00_Assembly_Procedures/store/downloaded/assembly.fasta")
+
 
 process calculateRegions {
 	tag { "Calculate regions" }
@@ -43,6 +44,7 @@ process FreeBayes {
 	cache true
 	queue 'large'
 	time '48h'
+	maxForks 2
 	memory '5000 MB'
 	conda 'bioconda::freebayes'
 	publishDir './freebayes-regions/'
