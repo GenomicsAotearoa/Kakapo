@@ -14,11 +14,9 @@ my $lane = $1;
 while (<$fh>) {
   chomp;
   my ($id, $name) = split /\t/;
-  $name =~ s/ /_/g;
 
   if (index($filename, $id) != -1) {
-    print "export NAME=\"$name\"\n";
-    print "export LANE=\"$lane\"\n";
+    print $name . "\t" . $lane . "\n";
     exit;
   }
 }
