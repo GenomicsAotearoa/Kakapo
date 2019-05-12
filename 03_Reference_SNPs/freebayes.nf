@@ -5,17 +5,16 @@
 	.set { reads_all }
 
 reads_all.subscribe { println it }*/
-cram_location = "$baseDir/alignments/*.cram"
+cram_location = "/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/alignments/*.cram"
 
-assembly = file("$baseDir/../00_Assembly_Procedures/store/downloaded/assembly.fasta")
-
+assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
 
 process calculateRegions {
 	tag { "Calculate regions" }
+	// Runs fast so execute locally
 	executor 'local'
 	cpus 1
-	cache true
-	queue 'prepost'
+	cache false
 	time '10m'
 	memory '1000 MB'
 	conda 'bioconda::freebayes'
@@ -27,7 +26,7 @@ process calculateRegions {
 		stdout regions
 
 	"""
-	fasta_generate_regions.py ${assembly} 1000000
+	fasta_generate_regions.py ${assembly} 500000
 	"""
 	
 }
@@ -40,13 +39,16 @@ regions
 
 process FreeBayes {
 	tag { "FreeBayes ${region_name}" }
-	cpus 1
-	errorStrategy 'finish'
+	cpus 2
+	errorStrategy 'ignore'
+//	errorStrategy 'finish'
 	cache true
+//	queue 'ga_hugemem'
 	queue 'large'
-	time '48h'
-	maxForks 2
-	memory '5000 MB'
+	time '3d'
+	memory '6 GB'
+//	memory '26 GB'
+//	memory '65 GB'
 	conda 'bioconda::freebayes'
 	publishDir './freebayes-regions/'
 
@@ -61,9 +63,8 @@ process FreeBayes {
 	"""
 	freebayes \
 		--fasta-reference ${assembly} \
-		--haplotype-length 100 \
+		--haplotype-length 120 \
 		--region ${region} \
-		-m 5 \
 		${cram_location} > ${region_name}.vcf
 	"""
 	
