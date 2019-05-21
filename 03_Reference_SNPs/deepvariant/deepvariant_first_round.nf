@@ -2,7 +2,8 @@
 // https://support.nesi.org.nz/hc/en-gb/articles/360000204076-Mahuika-Slurm-Partitions
 
 Channel
-  .fromFilePairs("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/alignments-dvtest/*.{cram,cram.crai}", flat: true)
+//  .fromFilePairs("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/alignments-dvtest/*.{cram,cram.crai}", flat: true)
+  .fromFilePairs("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/alignments/*.{cram,cram.crai}", flat: true)
   .set { alignments }
 
 reference = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/ref/assembly.fasta")
