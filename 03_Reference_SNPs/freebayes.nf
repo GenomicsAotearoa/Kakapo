@@ -42,15 +42,16 @@ process FreeBayes {
 	cpus 2
 	errorStrategy 'ignore'
 //	errorStrategy 'finish'
-	cache true
+	cache 'lenient'
 //	queue 'ga_hugemem'
-	queue 'large'
-	time '3d'
-	memory '6 GB'
+	queue 'long'
+	time '10d'
+//	memory '6 GB'
 //	memory '26 GB'
-//	memory '65 GB'
+	memory '104 GB'
 	conda 'bioconda::freebayes'
-	publishDir './freebayes-regions/'
+	storeDir './freebayes-regions/'
+//	publishDir './freebayes-regions/'
 
 	input:
 		assembly
