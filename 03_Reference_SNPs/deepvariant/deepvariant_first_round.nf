@@ -13,11 +13,11 @@ process makeExamples {
   tag { "${accession}" }
   storeDir "./examples"
   cache true
-  cpus 2
-  queue 'prepost'
-  memory '6GB'
-  time '3h'
-  module 'Singularity/.3.1.0'
+  cpus 4
+  queue 'large'
+  memory '100GB'
+  time '24h'
+  module 'Singularity/.3.2.0'
 
   input:
     set accession, cram, crai from alignments
@@ -28,12 +28,18 @@ process makeExamples {
 
   """
   ls ${reference_path}
+
   /opt/deepvariant/bin/make_examples \
       --mode=calling \
       --use_ref_for_cram=true \
       --ref=${reference} \
       --examples ${accession}.examples \
+      --logging_every_n_candidates 5000 \
+      --sample_name ${accession} \
+      --max_reads_per_partition 1000 \
+      --partition_size 600 \
       --reads ${cram}
+
   """
 
 }
@@ -43,10 +49,10 @@ process callVariants {
   storeDir "./calledVariants"
   cache true
   cpus 2
-  memory '12GB'
+  memory '60GB'
   queue 'large'
-  time '16h'
-  module 'Singularity/.3.1.0'
+  time '24h'
+  module 'Singularity/.3.2.0'
 
   input:
     reference_path
@@ -72,7 +78,7 @@ process postprocess {
   memory '6GB'
   cache true
   publishDir './vcfs', mode: 'copy', overwrite: true
-  module 'Singularity/.3.1.0'
+  module 'Singularity/.3.2.0'
 
   input:
     set accession, cram, crai, called from called_ch
