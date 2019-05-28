@@ -21,6 +21,19 @@ while (<$fh>) {
 	$id =~ s/:/_/g;
 	if (!$finished{$id}) {
 		print $id . "\n";
-		print $missing $orig_id . "\n";
+
+		# Missing, so we need to split it up
+		$orig_id =~ /(.*:)(\d+)-(\d+)/;
+		my $header = $1;
+		my $start = $2;
+		my $end = $3;
+		my $startx = $start;
+		my $endx = $start += 10000;
+		while ($endx < $end) {
+			print $missing $header . "$startx-$endx" . "\n";
+			$startx = $endx + 1;
+			$endx = $startx + 10000 - 1;
+		}
+		print $missing $header . "$startx-$end" . "\n";
 	}
 }
