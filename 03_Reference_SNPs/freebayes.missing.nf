@@ -9,27 +9,10 @@ cram_location = "/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Refere
 
 assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
 
-process calculateRegions {
-	tag { "Calculate regions" }
-	// Runs fast so execute locally
-	executor 'local'
-	cpus 1
-	cache false
-	time '10m'
-	memory '1000 MB'
-	conda 'bioconda::freebayes'
-	
-	input:
-		assembly
-
-	output:
-		stdout regions
-
-	"""
-	fasta_generate_regions.py ${assembly} 500000
-	"""
-	
-}
+Channel
+     .fromPath('missing_regions.txt')
+     .splitText()
+     .set { regions }
 
 regions
 	.collect()
@@ -40,18 +23,14 @@ regions
 process FreeBayes {
 	tag { "FreeBayes ${region_name}" }
 	cpus 2
+	maxRetries 5
 	errorStrategy 'ignore'
-//	errorStrategy 'finish'
 	cache 'lenient'
-//	queue 'ga_hugemem'
-	queue 'long'
-	time '10d'
-//	memory '6 GB'
-//	memory '26 GB'
-	memory '104 GB'
+	queue 'large'
+	time { 6.hour * task.attempt }
+	memory { 12.GB * task.attempt }
 	conda 'bioconda::freebayes'
 	storeDir './freebayes-regions/'
-//	publishDir './freebayes-regions/'
 
 	input:
 		assembly
