@@ -19,12 +19,11 @@ Channel
 process FreeBayes {
 	tag { "FreeBayes ${region_name}" }
 	cpus 2
-	maxRetries 5
-	errorStrategy 'retry'
+	errorStrategy 'ignore'
 	cache 'lenient'
-	queue { task.attempt = 1 ? 'bigmem,ga_bigmem' : 'hugemem,ga_hugemem' }
-	time { 12.hour * task.attempt }
-	memory { 8.GB * task.attempt }
+	queue 'large'
+	time { 2.hour * task.attempt }
+	memory { 3.GB * task.attempt }
 	conda 'bioconda::freebayes'
 	storeDir './freebayes-regions.m2/'
 
