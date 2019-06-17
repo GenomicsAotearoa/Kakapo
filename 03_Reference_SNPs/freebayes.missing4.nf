@@ -1,3 +1,8 @@
+// This step in the pipeline performed with
+// Freebayes version:  v1.3.1-12-g06fe585-dirty
+// Due to fixes live in github but no in the version available on bioconda
+
+
 // Should do a proper split but this is quicker
 /*Channel
 	.fromPath("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/alignments/*.cram")
