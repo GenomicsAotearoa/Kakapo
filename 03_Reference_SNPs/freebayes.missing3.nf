@@ -11,19 +11,19 @@ assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assemb
 
 
 Channel
-     .fromPath('missing_regions2.txt')
+     .fromPath('missing_regions3.txt')
      .splitText(by: 1)
      .map { [it.trim().replaceAll(":", "_"), it.trim()] }
      .set { regions_processed }
 
 process FreeBayes {
 	tag { "FreeBayes ${region_name}" }
-	cpus 12
-	errorStrategy 'ignore'
+	cpus 6
+	errorStrategy 'retry'
 	cache 'lenient'
-	queue 'large,bigmem,ga_bigmem,hugemem,ga_hugemem'
-	time { 8.hour + (4 * task.attempt)  }
-	memory { 96.GB * task.attempt }
+	queue 'bigmem,ga_bigmem'
+	time { 24.hour + (4.hour * task.attempt)  }
+	memory { 60.GB + ( 20.GB * task.attempt) }
 	conda 'bioconda::freebayes'
 	storeDir './freebayes-regions.m2/'
 
