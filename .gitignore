@@ -52,3 +52,5 @@ s3/
 previous/*
 **/*.fq.gz
 **/*dmnd
+**/alignments-separate
+**/alignments

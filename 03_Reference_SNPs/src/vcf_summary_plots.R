@@ -1,15 +1,13 @@
 #!/usr/bin/env Rscript
 
-library(gridExtra)
+
 library(tidyverse)
 
+###########
+# GLOBALS #
+###########
+
 files <- commandArgs(trailingOnly = TRUE)
-
-# files <- c("simple_36",  "simple_36_TsTv-by-qual", "simple_36_freq",	"simple_36_site-depth", "simple_36_geno-depth", "simple_36_depth", "simple_36_site-mean-depth", "simple_36_TsTv-summary", "simple_36_hist-indel-len", 	"simple_36_TsTv-by-count", "simple_36_missing-site", "simple_36_missing-indv")
-# setwd("~/projects/kakapo-genomics/trial_vcfstats/")
-# 
-
-
 
 basename <- str_remove(files[1],".txt")
 
@@ -54,35 +52,9 @@ for (i in 2:12){
   }
 }
 
-
-# 
-# ldepth <- read_tsv(files[1])
-# ldepth_mean <- read_tsv(files[2])
-# gdepth <- read_tsv(files[3])
-# tstv_count <- read_tsv(files[4])
-# tstv_qual <- read_tsv(files[5])
-# tstv_summary <- read_tsv(files[6])
-# indiv_miss <- read_tsv(files[7])
-# site_miss <- read_tsv(files[8])
-# indel_hist <- read_tsv(files[9])
-
-
-
-
-
-# ldepth <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.ldepth')
-# ldepth_mean <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.ldepth.mean')
-# gdepth <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.gdepth')
-# tstv_count <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.TsTv.count')
-# tstv_qual <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.TsTv.qual')
-# tstv_summary <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.TsTv.summary')
-# indiv_miss <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.imiss')
-# site_miss <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.lmiss')
-# indel_hist <- read_tsv('~/projects/kakapo-genomics/trial_vcfstats/out.indel.hist')
-
-
-# Gdepth doesn't seem that helpful
-
+########
+# MAIN #
+########
 
 # Indel summary
 indels_plot <- ggplot(data = indel_hist, aes(x = LENGTH, y = COUNT)) +
@@ -119,6 +91,7 @@ tstv_count <- ggplot(data = tstv_count, aes(x = ALT_ALLELE_COUNT, y = `Ts/Tv`)) 
   geom_bar(stat = 'identity')
 
 
+# Print plots to a pdf
 pdf(paste0(basename, "_vcfstats.pdf"))
 plot(indels_plot)
 plot(indiv_miss_plot)

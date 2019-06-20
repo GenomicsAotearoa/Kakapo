@@ -6,6 +6,7 @@ library(tidyverse)
 ###########
 # GLOBALS #
 ###########
+
 # Inputs
 files <- commandArgs(trailingOnly = TRUE)
 
@@ -18,29 +19,10 @@ ids_file <- files[6]
 parents_file <- files[7]
 update_sex_file <- files[8]
 
+########
+# MAIN #
+########
 
-
-
-# 
-# print(bird_details_wiki)
-# print(seq_birds_file)
-# print(contig_list)
-
-# write_tsv(bird_details_wiki,contigs_map)
-# print(vcf_file)
-# vcf_file <- "~/projects/kakapo-genomics/output/02_assess_vcfs/tidy_vcfs/simple_36_dedup.vcf"
-
-# bird_details_wiki <- "~/projects/kakapo-genomics/old_files/formatted_bird_list_manual.csv"
-# seq_birds_file <- "~/projects/kakapo-genomics/output/02_assess_vcfs/tidy_vcfs/seq_indiv.txt"
-# contig_list <-  "~/Downloads/contigs.txt"
-# 
-# # Outputs
-# contigs_map <-  "~/projects/kakapo-genomics/output/02_assess_vcfs/mendelian_errors/chrom_map.txt"
-# names_file <- "~/projects/kakapo-genomics/output/02_assess_vcfs/mendelian_errors/all_trio_names.txt"
-# ids_file <-  "~/projects/kakapo-genomics/output/02_assess_vcfs/mendelian_errors/all_trio_id.txt"
-# parents_file <-  "~/projects/kakapo-genomics/output/02_assess_vcfs/mendelian_errors/all_trio_id_parents.txt"
-# update_sex_file <- "~/projects/kakapo-genomics/output/02_assess_vcfs/mendelian_errors/all_trio_id_sex.txt"
-# 
 # Import details about all birds I have info for (some are not sequenced)
 all_wiki <- read_csv(bird_details_wiki) %>%
   mutate(ID = str_replace_all(ID, " ", "_")) %>%
@@ -51,8 +33,6 @@ all_wiki <- read_csv(bird_details_wiki) %>%
 seq_birds <-read_delim(seq_birds_file, delim = '\t', col_names = FALSE) %>% 
   gather() %>% 
   select(value)
-
-
 
 
 # Add info to the sequenced bird names

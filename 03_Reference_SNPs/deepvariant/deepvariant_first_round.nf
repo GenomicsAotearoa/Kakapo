@@ -16,8 +16,8 @@ process makeExamples {
   cache true
   cpus 4
   queue 'large'
-  memory '100GB'
-  time '24h'
+  memory '140GB'
+  time '72h'
   module 'Singularity/.3.2.0'
 
   input:
@@ -50,9 +50,9 @@ process callVariants {
   storeDir "./calledVariants"
   cache true
   cpus 2
-  memory '60GB'
+  memory '80GB'
   queue 'large'
-  time '24h'
+  time '48h'
   module 'Singularity/.3.2.0'
 
   input:
