@@ -13,7 +13,7 @@ params.vcf = "data/simple_36.vcf"
 vcf = file(params.vcf)
 
 
-tidy_wiki_birdlist = file("old_files/formatted_bird_list_manual.csv")
+tidy_wiki_birdlist = file("formatted_bird_list_manual.csv")
 
 
 vcf_tools_analyses = Channel.from("freq", "depth", "site-depth", "site-mean-depth", 
@@ -27,6 +27,7 @@ vcf_tools_analyses = Channel.from("freq", "depth", "site-depth", "site-mean-dept
 
 /*01 This seems to be necessary because the freebayes vcf header is not in a valid format*/
 process delete_header_info {
+	tag { "tidy_header_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/tidy_vcfs', mode: 'copy'
 
 	conda 'bioconda::bcftools'
@@ -45,6 +46,7 @@ process delete_header_info {
 
 /*02 Convert haplotypes to simple alleles (needed for the freebayes output)*/
 process convert_allelic_primitives{
+	tag { "convert_ap_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/tidy_vcfs', mode: 'copy'
 
 	conda 'bioconda::vcflib'
@@ -62,8 +64,9 @@ process convert_allelic_primitives{
 
 
 /*03 Deduplicate variants after converting haplotypes to allelic primatives*/
+/*Note that this appears to remove one duplicate without merging*/
 process deduplicate_variants{
-	executor 'local'
+	tag { "deduplicate_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/tidy_vcfs', mode: 'copy'
 
 	conda 'bioconda::bcftools'
@@ -83,7 +86,8 @@ process deduplicate_variants{
 
 
 /* 04 Generate summary statistics for the vcfs*/
-process get_vcf_stats_3{
+process get_vcf_stats{
+	tag { "vcftools_stats_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/tidy_vcfs'
 	
 	conda 'bioconda::vcftools'
@@ -101,8 +105,9 @@ process get_vcf_stats_3{
 }
 
 
-
+/*05 Plot summary statistics for the vcfs. Add to this for more plots*/
 process plot_vcf_stats{
+	tag { "plot_stats_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/tidy_vcfs', mode: 'copy'
 
 	input:
@@ -136,8 +141,9 @@ process plot_vcf_stats{
 
 
 
-
+/*Make the files plink needs to edit ped files for mendelian error testing*/
 process make_files_for_mendel_errors{
+	tag { "me_files_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/mendelian_errors', mode: 'copy'
 
 	input:
@@ -162,7 +168,7 @@ process make_files_for_mendel_errors{
 
 /* Convert the vcf to ped for use by plink*/
 process convert_to_ped{
-	executor 'local'
+	tag { "vcf_ped_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/mendelian_errors', mode: 'copy'
 
 	conda 'bioconda::vcftools'
@@ -182,7 +188,7 @@ process convert_to_ped{
 
 /*Update the family IDs in the PED so plink is happy*/
 process update_ped_ids{
-	executor 'local'
+	tag { "ped_ids_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/mendelian_errors', mode: 'copy'
 
 	conda 'bioconda::plink'
@@ -204,7 +210,7 @@ process update_ped_ids{
 
 /*Add information about relationship and sex to the PED file*/
 process update_other_details{
-	executor 'local'
+	tag { "ped_details_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/mendelian_errors', mode: 'copy'
 
 	conda 'bioconda::plink'
@@ -231,7 +237,7 @@ process update_other_details{
 
 /*Calculate mendelian errors for all the trios*/
 process calculate_mendel_errors{
-	executor 'local'
+	tag { "mendel_errors_${vcf.baseName}" }
 	publishDir './output/02_assess_vcfs/mendelian_errors', mode: 'copy'
 
 	conda 'bioconda::plink'
