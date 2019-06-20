@@ -54,3 +54,14 @@ previous/*
 **/*dmnd
 **/alignments-separate
 **/alignments
+*.csi
+*.gzi
+*.bcf
+*.vcf
+*.bak
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.gif
+
