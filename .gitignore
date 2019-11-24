@@ -64,4 +64,8 @@ previous/*
 *.jpg
 *.jpeg
 *.gif
-
+*.html.*
+*.html
+*.log
+*.log.*
+*.gvcf
