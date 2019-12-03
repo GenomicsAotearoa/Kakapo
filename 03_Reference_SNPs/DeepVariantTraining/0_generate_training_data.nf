@@ -12,9 +12,9 @@ process generateConfidentRegions {
     publishDir './training_data', mode: 'copy'
     tag { "${gvcf.baseName}" }
     queue 'prepost'
-    time '3h'
+    time '1h'
     cpus '2'
-    memory '3g'
+    memory '2g'
 
     """
     get_confident_regions.pl ${gvcf} > ${gvcf.baseName}.bed
@@ -29,12 +29,12 @@ process generateConfidentSnps {
     publishDir './training_data', mode: 'copy'
     tag { "${vcf.baseName}" }
     queue 'prepost'
-    time '3h'
+    time '1h'
     cpus '2'
-    memory '3g'
+    memory '2g'
 
     """
     mkdir confident/
-    get_confident_snps.pl ${vcf} > confident/${vcf.baseName}.vcf
+    get_confident_snps.pl ${vcf} ${vcf.baseName} > confident/${vcf.baseName}.vcf
     """
 }
