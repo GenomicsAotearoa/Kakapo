@@ -124,4 +124,6 @@ checkpoint
 */GLnexus.db
 */GLnexus.DB
 **/GLnexus.DB/*
-
+chr
+validation_chrs
+plink*
