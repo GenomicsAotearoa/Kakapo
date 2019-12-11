@@ -69,3 +69,11 @@ previous/*
 *.log
 *.log.*
 *.gvcf
+*.tbi
+*.gz
+*.called
+*.examples
+*.index
+*.meta
+*.metrics
+*data*of*
