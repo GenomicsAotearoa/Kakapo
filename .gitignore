@@ -127,3 +127,5 @@ checkpoint
 chr
 validation_chrs
 plink*
+*.sif
+*.simg
