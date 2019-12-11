@@ -113,3 +113,15 @@ nxf-tmp*
 *.cluster?
 *.genome
 *.txt
+roh
+gtcheck*
+*pbtxt
+*pbtext
+checkpoint
+*.pdf
+*json
+*tex
+*/GLnexus.db
+*/GLnexus.DB
+**/GLnexus.DB/*
+
