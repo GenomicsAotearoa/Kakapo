@@ -129,3 +129,5 @@ validation_chrs
 plink*
 *.sif
 *.simg
+glnexus_cli
+list_of_snps
