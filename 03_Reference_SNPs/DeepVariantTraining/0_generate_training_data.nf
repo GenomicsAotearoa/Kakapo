@@ -4,24 +4,30 @@ Channel.fromPath("../deepvariant/gvcfs/*.gvcf")
 Channel.fromPath("../deepvariant/vcfs/*.vcf")
     .set { vcfs }
 
+Channel.fromPath("../alignments.original_reference/*cram")
+    .set { crams }
+
+reference = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/ref/assembly.fasta")
+
 process generateConfidentRegions {
     input: 
-        file(gvcf) from gvcfs
+        file(cram) from crams
     output: 
-        file("${gvcf.baseName}.bed") into bed_regions
+        file("${cram.baseName}.bed") into bed_regions
     publishDir './training_data', mode: 'copy'
-    tag { "${gvcf.baseName}" }
+    tag { "${cram.baseName}" }
     queue 'prepost'
     time '1h'
     cpus '2'
     memory '2g'
+    conda 'bioconda::samtools'
 
     """
-    get_confident_regions.pl ${gvcf} > ${gvcf.baseName}.bed
+    samtools depth -q 10 -Q 10 -d 200 --reference=${reference} ${cram} | get_confident_regions.pl > ${cram.baseName}.bed
     """
 }
 
-process generateConfidentSnps {
+/* process generateConfidentSnps {
     input: 
         file(vcf) from vcfs
     output: 
@@ -37,4 +43,4 @@ process generateConfidentSnps {
     mkdir confident/
     get_confident_snps.pl ${vcf} ${vcf.baseName} > confident/${vcf.baseName}.vcf
     """
-}
+} */

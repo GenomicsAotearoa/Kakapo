@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 # Conda vcflib
-conda activate vcflib
+# conda activate vcflib
 # cat freebayes-regions/* | vcffirstheader | vcfstreamsort -w 1000 | vcfuniq |  vcffilter -f "QUAL > 20" > testing.vcf
 
 # cat testing.vcf | vcfallelicprimitives -kg | vcffilter -f "QUAL > 30" > testing.filtered.vcf
@@ -17,5 +17,5 @@ conda activate vcflib
 conda activate faststructure
 for i in $(seq 1 20);
 do
-	python /nesi/project/uoo02695/software/fastStructure/structure.py -K $i --input=testing --output=faststructure-testing/testing
+	python /nesi/project/uoo02695/software/fastStructure/structure.py -K $i --input=plink2_pruned --output=faststructure/dv_plink2_pruned
 done

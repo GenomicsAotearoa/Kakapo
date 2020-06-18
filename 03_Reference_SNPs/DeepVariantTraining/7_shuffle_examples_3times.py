@@ -45,7 +45,7 @@ inputs = glob.glob("./training_examples_selected/*examples");
 random.shuffle(inputs);
 
 raw_dataset = tf.data.TFRecordDataset(inputs)
-for raw_record in itershuffle(raw_dataset, 35000):
+for raw_record in itershuffle(raw_dataset, 10000):
   example = tf.train.Example()
   example.ParseFromString(raw_record.numpy())
   writer = random.choice(out_fhs)
@@ -55,9 +55,48 @@ for raw_record in itershuffle(raw_dataset, 35000):
 
 print("Total examples: " + str(examples));
   
+shuffle_tmp_files = 8192
+out_fhs = list()
+
+for i in range(shuffle_tmp_files):
+        filename = "./shuffle_tmp2/" + str(i) + ".examples";
+        fh = tf.io.TFRecordWriter(filename)
+        out_fhs.append(fh)
+
 inputs = glob.glob("./shuffle_tmp/*examples");
 random.shuffle(inputs);
 
+raw_dataset = tf.data.TFRecordDataset(inputs)
+for raw_record in itershuffle(raw_dataset, 10000):
+  example = tf.train.Example()
+  example.ParseFromString(raw_record.numpy())
+  writer = random.choice(out_fhs)
+  writer.write(example.SerializeToString())
+  # print(raw_record)
+
+shuffle_tmp_files = 8192
+out_fhs = list()
+
+for i in range(shuffle_tmp_files):
+        filename = "./shuffle_tmp3/" + str(i) + ".examples";
+        fh = tf.io.TFRecordWriter(filename)
+        out_fhs.append(fh)
+
+inputs = glob.glob("./shuffle_tmp2/*examples");
+random.shuffle(inputs);
+
+raw_dataset = tf.data.TFRecordDataset(inputs)
+for raw_record in itershuffle(raw_dataset, 20000):
+  example = tf.train.Example()
+  example.ParseFromString(raw_record.numpy())
+  writer = random.choice(out_fhs)
+  writer.write(example.SerializeToString())
+  # print(raw_record)
+
+inputs = glob.glob("./shuffle_tmp3/*examples");
+random.shuffle(inputs);
+
+out_fhs = list()
 shuffle_tmp_files = 8196
 out_fhs = list()
 
@@ -67,7 +106,7 @@ for i in range(shuffle_tmp_files):
         out_fhs.append(fh)
 
 raw_dataset = tf.data.TFRecordDataset(inputs)
-for raw_record in itershuffle(raw_dataset, 35000):
+for raw_record in itershuffle(raw_dataset, 25000):
   example = tf.train.Example()
   example.ParseFromString(raw_record.numpy())
   writer = random.choice(out_fhs)

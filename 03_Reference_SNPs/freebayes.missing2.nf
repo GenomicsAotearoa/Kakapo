@@ -19,7 +19,7 @@ Channel
 process FreeBayes {
 	tag { "FreeBayes ${region_name}" }
 	cpus 12
-	errorStrategy 'ignore'
+	//errorStrategy 'ignore'
 	cache 'lenient'
 	queue 'large,bigmem,ga_bigmem,hugemem,ga_hugemem'
 	time { 8.hour + (4 * task.attempt)  }

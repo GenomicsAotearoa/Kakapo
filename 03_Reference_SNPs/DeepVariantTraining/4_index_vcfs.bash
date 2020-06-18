@@ -1,4 +1,4 @@
 for i in final_vcfs/*gz
 do
-	tabix $i
+	tabix -f $i
 done

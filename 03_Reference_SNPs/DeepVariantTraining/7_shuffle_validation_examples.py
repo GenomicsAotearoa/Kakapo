@@ -37,12 +37,12 @@ out_fhs = list()
 examples = 0
 
 for i in range(shuffle_tmp_files):
-	filename = "./shuffle_tmp/" + str(i) + ".examples";
+	filename = "./shuffle_validation_tmp/" + str(i) + ".examples";
 	fh = tf.io.TFRecordWriter(filename)
 	out_fhs.append(fh)
 
-inputs = glob.glob("./training_examples_selected/*examples");
-random.shuffle(inputs);
+inputs = glob.glob("./validation_examples_selected/*examples");
+random.shuffle(inputs)
 
 raw_dataset = tf.data.TFRecordDataset(inputs)
 for raw_record in itershuffle(raw_dataset, 35000):
@@ -55,14 +55,14 @@ for raw_record in itershuffle(raw_dataset, 35000):
 
 print("Total examples: " + str(examples));
   
-inputs = glob.glob("./shuffle_tmp/*examples");
+inputs = glob.glob("./shuffle_validation_tmp/*examples");
 random.shuffle(inputs);
 
 shuffle_tmp_files = 8196
 out_fhs = list()
 
 for i in range(shuffle_tmp_files):
-        filename = "./training_examples_shuffled/" + str(i) + ".examples";
+        filename = "./validation_examples_shuffled/" + str(i) + ".examples";
         fh = tf.io.TFRecordWriter(filename)
         out_fhs.append(fh)
 

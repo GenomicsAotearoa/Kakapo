@@ -10,18 +10,20 @@
  * 2019 25 March - Convert to SLURM for NeSI
  */
 
-assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
+// assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/00_Assembly_Procedures/store/downloaded/assembly.fasta")
+assembly = file("/scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/02_Alignments_to_Reference/updated_reference.fasta")
 
 Channel
-.fromFilePairs('reads/*{r1,r2,s}*.fq.gz', size: 3)
-	.set { reads_all }
+.fromFilePairs('/nesi/project/uoo02695/reads_processed/*{r1,r2,s}*.fq.gz', size: 3)
+	.into { reads_all; debug }
+
+debug.println()
 
 // Genome must be already bwa indexed
 
 process mapReads {
   tag { "${read_id}" }
   cpus 32
-  cache true
   queue 'large'
   time '6h'
   memory '48 GB'

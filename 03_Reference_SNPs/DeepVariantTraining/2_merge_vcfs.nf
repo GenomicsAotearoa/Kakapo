@@ -6,7 +6,7 @@ process sortVcf {
 		file(vcf) from unsorted
 	output:
 		file("sorted/${vcf.baseName}.vcf") into sorted
-	storeDir './misnps_sorted/'
+//	storeDir './misnps_sorted/'
 	conda 'bioconda::bcftools'
     queue 'prepost'
     time '3h'
@@ -26,7 +26,7 @@ process mergeVcfs {
 		file(vcf) from sorted
 	output:
 		file("merged/${vcf.baseName}.vcf.gz")
-	storeDir 'merged_vcfs'
+//	storeDir 'merged_vcfs'
 	publishDir 'merged_training_vcfs', mode: 'copy'
 	conda 'bioconda::bcftools'
         tag { "${vcf.baseName}" }
@@ -47,7 +47,8 @@ process mergeVcfs {
 	bgzip -f remove_dupes.vcf
 	bgzip -fr remove_dupes.vcf.gz
 	tabix -f remove_dupes.vcf.gz
-	bcftools concat -a -D remove_dupes.vcf.gz ${vcf}.gz > merged/${vcf.baseName}.vcf
+	bcftools concat -a -D remove_dupes.vcf.gz ${vcf}.gz > dupes_removed.vcf
+	bcftools view --min-ac=1 dupes_removed.vcf > merged/${vcf.baseName}.vcf
 	bgzip merged/${vcf.baseName}.vcf
 	"""
 }
