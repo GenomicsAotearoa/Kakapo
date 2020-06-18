@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH -D /scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/DeepVariantTrainedSNPCalling_0.10.0/
+#SBATCH -J mergeGvcfs
+#SBATCH -o /scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/DeepVariantTrainedSNPCalling_0.10.0/merge.job.log
+#SBATCH -c 72
+#SBATCH -t 12:00:00
+#SBATCH --mem 102G
+#SBATCH -p large
+#SBATCH -A uoo02695
+
+module load Singularity
+singularity run glnexus_v1.2.3.sif glnexus_cli \
+	--config DeepVariantWGS \
+	-a --threads 64 vcfs/*gvcf \
+	-m 76 1>merged.gvcf 2>err.log
+

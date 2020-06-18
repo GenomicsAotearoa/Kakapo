@@ -16,12 +16,15 @@ while (<$fh>) {
     my ($landmark, $start, $a, $b, $c, $d, $e, $end_tag, $format, $results) = @data;
     my @results = split(/:/, $results);
     my ($allele, $gq, $dp, $pl) = @results;
-    next unless $allele eq '0/0';
+    # Need regions that are confident...
+    # next unless $allele eq '0/0';
     next unless $gq > 20;
     next unless $dp > 15;
 
     $end_tag =~ /END=(\d+)/;
     my $end = $1;
+
+    $start = $start - 1; # Bed format is 0-based
 
     print $landmark . "\t" . $start . "\t" . $end . "\n";
 

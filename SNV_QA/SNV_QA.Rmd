@@ -1,0 +1,205 @@
+---
+title: "Initial look at Kākāpō SNV data"
+author: David Winter
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+    pdf_document:
+        latex_engine: xelatex
+monofont : FreeMono
+mainfont: "Linux Libertine O"
+---
+
+# What was done before this document was compiled?
+
+All of this work refers to the file `Trained.bcf`, with md5sum 
+`c8f52c4e76dda4414086f88dbe046f07`. To take a quick look at some simple summary 
+stats on I ran `vcf-tools` with the following output options (and no filtering
+at all).
+
+```
+--remove-indels 
+--site-depth
+--TsTv-summary 
+--window-pi 10000 
+--het 
+--freq2
+--hardy
+```
+
+All of the output files are in teh `summary_data` directory. 
+
+# Quick QA
+
+Here a present a few sanity checks on the SNV data and how it might be used.
+Note tehse analyses mostly treat the Kākāpō as a single population, so ignore
+both the pedigree and the fact founders of the population may be genetically
+diverse (and overlap with descendants in this data).
+
+## TsTv
+
+```{r, tstv}
+TsTv <- read.table("summary_data/kakapo_summary.TsTv.summary", skip=7)[,2]
+TsTv[1]/TsTv[2]
+```
+
+In mammals, we expect the ratio of transitions to transversions to be about
+2.1:1. In Kākāpō we get `r round(TsTv[1]/TsTv[2],2)`. Bird people can give their
+perspective on this, but seeems fine to me?
+
+
+## Individual homozygosity
+
+I first looked the individual levels of homozygosityy ($H_O$) v expected levels
+($H_E$). 
+
+```{r}
+library(ggplot2)
+library(ggpubr)
+
+het <- read.table("summary_data/kakapo_summary.het", header=TRUE, 
+                  col.names=c("ind", "Ho", "He", "n", "F")
+)
+ggplot(het, aes(He, Ho, label=ind)) + 
+    geom_text(colour="forestgreen") + 
+    theme_pubr() + 
+    geom_abline()
+```
+
+The line here represent $H_O$ = $H_E$, so birds above the line are more
+homozygous than expected and those below it less so. There are a small number of 
+birds with much lower $H_O$ and $H_E$, but
+note these include Richard Henry (from the South Island bird) and his offspring.
+Because $H_E$ is calculated on the assumption that this is a single panmictic
+population, this is only telling you that Richard Henry was more heterozygous
+than other birds and his descendants are too (since they have South Island and
+Steward Island ancestry). 
+
+## Diversity across the genome
+
+We can use nucleotide diversity as a measure of whether genetic variatoin is
+even spread across the genome. I calculated tajima's $\pi$ in 10 kb windows
+across the refernce genome. The distribution of this statistic is strongly
+skewed (the mean is more than an order of magnate due higher than the mode)
+
+
+```{r}
+tajima <- read.table("summary_data/kakapo_summary.windowed.pi", header=TRUE)
+ggplot(tajima, aes(PI)) + 
+    geom_density(fill="steelblue") + 
+    theme_pubr() + 
+    geom_vline(xintercept=mean(tajima$PI))
+```
+
+Focusing on the longest scaffolds, it's clear that the high-diversity regions
+are clustered in (but not unique to) the ends of scaffolds. I don't knwo which
+of these scaffolds are chromosomes, but it may be that subtelomeric repeats
+(presuming these exist in appreciable numbers in birds?) or other repeats that
+have broken scaffolds in assembly are responsible for this pattern?
+
+```{r}
+tajima_long <- subset(tajima, CHROM %in% paste0("S", 1:9))
+
+ggplot(tajima_long, aes(BIN_START, PI)) + 
+    geom_step() + 
+    facet_grid(CHROM ~ .) + 
+    theme_bw() + 
+    scale_x_continuous("Position (Mb)", label=function(x) x/1e6)
+```
+
+## Heterozygosity across loci
+
+One tell-tail sign of miscalled bases in an excess of heteroyzgosity at
+particular sites. A test for Hardy Weinberg equilibrium reveals quite a few low
+loci with very low p-values for excess heterozygotes.
+
+```{r}
+hwe <- read.table("summary_data/kakapo_summary.hwe", header=TRUE)
+ggplot(hwe, aes(P_HET_EXCESS)) + 
+    geom_histogram(colour="white", fill="steelblue", bins=100) + theme_pubr()
+```
+
+These sites can go some way to explaining the spikes in diversity.
+
+```{r}
+sus_hwe <- subset(hwe, CHR %in% paste0("S", 1:9) & P_HET_EXCESS < 1e-6)
+names(sus_hwe)[1] <- "CHROM"
+
+ggplot() + 
+    geom_step(data=tajima_long, aes(BIN_START, PI)) + 
+    geom_jitter(data=sus_hwe, aes(POS, -0.01), width=0, height=0.005, alpha=0.2) + 
+    facet_grid(CHROM ~ .) + 
+    scale_x_continuous("Position (Mb)", label=function(x) x/1e6) +
+    theme_bw()
+```
+
+## Many overly heterozygous loci have high read-depth
+
+Another sign of repeat-induced miscalls is high sequencing depth, and indeed we
+find loci with high heterozygous excess tend to have higher depth too
+
+```{r}
+hwe$direction <- ifelse(hwe$P_HET_EXCESS > hwe$P_HET_DEFICIT, "over", "under") 
+hwe$key <- paste0(hwe$CHR, ":", hwe$POS)
+
+D <- read.table("summary_data/kakapo_summary.ldepth", header=TRUE)
+D$key <- paste0(D$CHROM, ":", D$POS)
+
+combined <- merge(hwe, D, by="key")
+ggplot(combined, aes(P_HET_EXCESS < 1e-6, SUM_DEPTH)) + 
+    geom_boxplot() + 
+    scale_y_log10() + 
+    theme_pubr()
+
+```
+
+The box plots are entirely clear about this, but the mean depth for sites with
+excess heterozygoisty (horizontal line) is a long way clear of the mean-depth 
+for all other sites:
+
+```{r}
+ggplot(D, aes(SUM_DEPTH)) + 
+    geom_density()  + 
+    geom_vline(xintercept=1e4) + 
+    scale_x_log10()
+```
+
+## Filtering out high sequencing coverage and low HWE pvals has little effect
+
+TO test wether removing the loci with excess hets and high coverage alleviated
+the apparent spikes in nucleotide diversity I re-ran the window stats using the
+following command 
+
+```sh
+vcftools --bcf ../vars/Trained.bcf --remove-indels \
+               --out summary_data/kakapo_filt      \
+               --max-meanDP 60 --hwe 1e-4 --window-pi 10000
+```
+
+This did very little to remove teh spikes in diversity. 
+
+```{r}
+tajima_filt <- read.table("summary_data/kakapo_filt.windowed.pi", header=TRUE)
+tajima_filt_long <- subset(tajima_filt, CHROM %in% paste0("S", 1:9))
+ggplot(tajima_filt_long, aes(BIN_START, PI)) + 
+    geom_step() + 
+    facet_grid(CHROM ~ .) + 
+    theme_bw() + 
+    scale_x_continuous("Position (Mb)", label=function(x) x/1e6)
+```
+
+## What else
+
+The obvious next step is to see if a repeat-mask will handle these spikes
+better.
+
+
+## Extra
+
+Not run in this document, but here is code to write the locations of loci with
+excess heterizygotes to a bed file
+
+```r
+write.table(sus_bed, 
+            quote = FALSE, 
+            row.names = FALSE, col.names = FALSE, sep="\t", "excess_hets.bed")
+```

@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH -D /scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/deepvariant/gvcfs
+#SBATCH -J MergeGVCF
+#SBATCH -o /scale_wlg_nobackup/filesets/nobackup/uoo02695/Kakapo/03_Reference_SNPs/deepvariant/gvcfs/merge.slurm.log
+#SBATCH --no-requeue
+#SBATCH -c 72
+#SBATCH -t 72:00:00
+#SBATCH --mem 94208M
+#SBATCH -p large
+#SBATCH -A uoo02695 --profile=all
+
+module load Singularity
+singularity run glnexus_v1.2.2.sif glnexus_cli --config DeepVariantWGS -a --threads 72 *final.gvcf -m 90 1>merged.gvcf 2>err.log
