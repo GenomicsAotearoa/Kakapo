@@ -1,0 +1,171 @@
+---
+title: "Initial plots for TE content in kākāpō"
+author: David Winter
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+    pdf_document:
+        latex_engine: xelatex
+monofont : FreeMono
+mainfont: "Linux Libertine O"
+---
+
+
+
+## Data
+
+All of these analyses are based on the most recent NCBI releases of the kākāpō
+and kea genomes. The RepeatMasker outputs are in `RM_out/`
+
+```sh
+md5sum RM_out/*
+```
+```
+ad05622c5167dc717d05218832d31b12  RM_out/GCF_000696875.1_ASM69687v1_rm.out
+92eac563fee0798aafc58fb0546d1183  RM_out/GCF_004027225.2_bStrHab1.2.pri_rm.out.gz
+```
+
+## Code
+
+In addition to the code here, I am using my in-devlopment R package for handling
+RepeatMasker output: https://github.com/dwinter/repeatR/commit/6f91706bd. 
+
+At the moment (as possibly in the future...) this code is very slow at parsing
+repeat masker outputs, so it will take some time to run this book (I have set
+al of the file-reading code-blocks to cache their output to partially avoid this
+problem).
+
+## Analysis
+
+### What's in each genome?
+
+This is a very basic look at the contents of each file. We start by loading
+packages and setting up a few files
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(repeatR)
+
+parrot_pal <- c(
+  kea    = "#c73e02",
+  kakapo = "#5f8647"
+)  
+
+#some meta data on TE classes
+tclasses <- read.csv("tclasses.tsv", sep="\t")
+```
+
+Then read in teh `RepeatMasker` outputs, this is the long-running step
+
+
+```{r, cache=TRUE}
+kakapo <- read_rm("RM_out/GCF_004027225.2_bStrHab1.2.pri_rm.out.gz")
+kea <- read_rm("RM_out/GCF_000696875.1_ASM69687v1_rm.out")
+```
+
+With the data on hand, we'll clean each one. We start by removing the non-TE
+elements discovered by `RepeatMasker`.
+
+```{r}
+to_drop <- c("rRNA", "rRNA", "Simple_repeat", "Low_complexity", 
+             "scRNA", "Satellite", "snRNA")
+
+kakapo_TE <- subset(kakapo, !tclass %in% to_drop)
+kea_TE <- subset(kea, !tclass %in% to_drop)
+```
+
+Then find the total length of the genome represented by each type of element.
+The `tclasses` data.frame sorts out the repaets into mid-level and very-high
+level categories. Here we will use the low-level ones.
+
+```{r}
+len_by_class <- function(RM_df, TE_data, level){
+    M <- merge(RM_df, TE_data)
+    lens <- aggregate(formula(paste("qend - qstart ~", level)), data=M, FUN=sum)
+    names(lens) <- c("repeat_type", "total_len")
+    lens
+}
+
+kakapo_lens <- len_by_class(kakapo_TE, tclasses, "mid_level")
+kea_lens <- len_by_class(kea_TE, tclasses, "mid_level")
+```
+
+Finally, we can put them all togetehr to visualize the TE content of each
+genome.
+
+```{r}
+kakapo_lens$spp <- "kakapo"
+kea_lens$spp <- "kea"
+nz_parrots <- rbind.data.frame(kakapo_lens, kea_lens)
+nz_parrots <- complete(nz_parrots, repeat_type, spp, fill=list(total_len = 0))
+
+ggplot(nz_parrots, aes(repeat_type,total_len, fill=spp)) + 
+    geom_col(position="dodge", colour='black') + 
+    coord_flip() + 
+    scale_y_continuous("total length of elements (Mb)", labels = function(x) x/1e6)  + 
+    theme_bw() + 
+    scale_fill_manual(values = parrot_pal)
+```
+
+
+### Zooming in to LINEs
+
+There seem to be a lot more LINEs in kākāpō than kea, so let's zoom in on those
+elements. First by making a new aggergatge data.frame with only the LINEs
+
+```{r}
+kakapo_LINE <- subset(kakapo_TE, grepl("LINE/", tclass))
+kakapo_LINE$spp <- "kakapo"
+kea_LINE <- subset(kea_TE, grepl("LINE/", tclass))
+kea_LINE$spp <- "kea"
+LINEs <- rbind.data.frame(kakapo_LINE, kea_LINE)
+
+LINE_lens <- aggregate(qend - qstart ~ tname + spp, data=LINEs, FUN=sum)
+names(LINE_lens) <- c("LINE_family", "spp", "total_len")
+LINE_lens$LINE_family <- droplevels(LINE_lens$LINE_family)
+
+LINE_lens <- complete(LINE_lens, LINE_family, spp, fill=list(total_len = 0))
+
+ggplot(LINE_lens, aes(LINE_family, total_len, fill=spp)) + 
+    geom_col(position="dodge", colour='black') + 
+    coord_flip() +
+    scale_fill_manual(values=parrot_pal) +
+    scale_y_continuous("total length of elements (Mb)", labels = function(x) x/1e6)  + 
+    theme_bw() 
+
+```
+
+So, there are a lot of kākāpō-specific families, but the biggest difference is
+in the CR1-Y2 family
+
+### Zooming in on CR1-Y2
+
+If CR1-Y2 has been especially active in the kākāpō lineage, we might expect
+there to be a predominance of young elements. One way of testin this is to look
+at the mean divergence from the consensus sequence for the family. 
+
+Munging this data together, we find really no evidnce for this (the
+distrubutions have verys simlar shapes):
+
+
+```{r}
+kakapo_Y2 <- subset(kakapo_TE, tname == "CR1-Y2_Aves")
+kakapo_Y2$spp <- "kakapo"
+kea_Y2 <- subset(kea_TE, tname == "CR1-Y2_Aves")
+kea_Y2$spp <- "kea"
+Y2 <- rbind.data.frame(kakapo_Y2, kea_Y2)
+
+
+ggplot(Y2, aes(p_sub, fill=spp)) + 
+    geom_histogram(colour='black') +
+    scale_fill_manual(values=parrot_pal) + 
+    facet_grid(spp~.)
+```
+
+## What have we learned
+
+Although the kākāpō dataset has more LINE elements, this may just reflect
+eitehr the version of `RepeatMasker` used in each case or the completeness of
+each genome. Most of the differences in LINEs can be expliaiend by the CR1-Y2
+family, but there is not evidence that this family has been especially active
+recently.

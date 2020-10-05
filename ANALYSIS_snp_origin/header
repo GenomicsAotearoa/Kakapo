@@ -1,0 +1,108 @@
+##GLnexusVersion=v1.2.3-0-g611f1c8
+##GLnexusConfigName=DeepVariantWGS
+##GLnexusConfigCRC32C=2857227159
+##GLnexusConfig={unifier_config: {drop_filtered: false, min_allele_copy_number: 1, min_AQ1: 10, min_AQ2: 10, min_GQ: 0, max_alleles_per_site: 32, monoallelic_sites_for_lost_alleles: true, preference: common}, genotyper_config: {revise_genotypes: true, min_assumed_allele_frequency: 9.99999975e-05, required_dp: 0, allow_partial_data: true, allele_dp_format: AD, ref_dp_format: MIN_DP, output_residuals: false, more_PL: true, squeeze: false, trim_uncalled_alleles: true, output_format: BCF, liftover_fields: [{orig_names: [MIN_DP, DP], name: DP, description: "##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Approximate read depth (reads with MQ=255 or with bad mates are filtered)\">", type: int, number: basic, default_type: missing, count: 1, combi_method: min, ignore_non_variants: true}, {orig_names: [AD], name: AD, description: "##FORMAT=<ID=AD,Number=R,Type=Integer,Description=\"Allelic depths for the ref and alt alleles in the order listed\">", type: int, number: alleles, default_type: zero, count: 0, combi_method: min, ignore_non_variants: false}, {orig_names: [GQ], name: GQ, description: "##FORMAT=<ID=GQ,Number=1,Type=Integer,Description=\"Genotype Quality\">", type: int, number: basic, default_type: missing, count: 1, combi_method: min, ignore_non_variants: true}, {orig_names: [PL], name: PL, description: "##FORMAT=<ID=PL,Number=G,Type=Integer,Description=\"Phred-scaled genotype Likelihoods\">", type: int, number: genotype, default_type: missing, count: 0, combi_method: missing, ignore_non_variants: true}]}}
+##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency estimate for each alternate allele">
+##INFO=<ID=AQ,Number=A,Type=Integer,Description="Allele Quality score reflecting evidence for each alternate allele (Phred scale)">
+##FILTER=<ID=MONOALLELIC,Description="Site represents one ALT allele in a region with multiple variants that could not be unified into non-overlapping multi-allelic sites">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=RNC,Number=2,Type=Character,Description="Reason for No Call in GT: . , M = Missing data, P = Partial data, I = gVCF input site is non-called, D = insufficient Depth of coverage, - = unrepresentable overlapping deletion, L = Lost/unrepresentable allele (other than deletion), U = multiple Unphased variants present, O = multiple Overlapping variants present, 1 = site is Monoallelic, no assertion about presence of REF or ALT allele">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ">
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
+##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="Phred-scaled genotype Likelihoods">
+##contig=<ID=S1,Length=155644563,IDX=0>
+##contig=<ID=S2,Length=123023803,IDX=1>
+##contig=<ID=S3,Length=101869369,IDX=2>
+##contig=<ID=S4,Length=89082643,IDX=3>
+##contig=<ID=S5,Length=86460390,IDX=4>
+##contig=<ID=S6,Length=83240647,IDX=5>
+##contig=<ID=S7,Length=76431904,IDX=6>
+##contig=<ID=S8,Length=70131234,IDX=7>
+##contig=<ID=S9,Length=63488934,IDX=8>
+##contig=<ID=S10,Length=44431488,IDX=9>
+##contig=<ID=S11,Length=43764472,IDX=10>
+##contig=<ID=S12,Length=39187110,IDX=11>
+##contig=<ID=S13,Length=37425726,IDX=12>
+##contig=<ID=S14,Length=27433492,IDX=13>
+##contig=<ID=S15,Length=16476160,IDX=14>
+##contig=<ID=S16,Length=12224398,IDX=15>
+##contig=<ID=S17,Length=12884122,IDX=16>
+##contig=<ID=S18,Length=12307978,IDX=17>
+##contig=<ID=S19,Length=8419051,IDX=18>
+##contig=<ID=S20,Length=7441144,IDX=19>
+##contig=<ID=S21,Length=6734548,IDX=20>
+##contig=<ID=S22,Length=5789228,IDX=21>
+##contig=<ID=S23,Length=5645757,IDX=22>
+##contig=<ID=S24,Length=5492648,IDX=23>
+##contig=<ID=S25,Length=2785283,IDX=24>
+##contig=<ID=S26,Length=2907026,IDX=25>
+##contig=<ID=NC_044298.1_ctg1,Length=556942,IDX=26>
+##contig=<ID=NC_044299.1_ctg1,Length=378074,IDX=27>
+##contig=<ID=NC_044300.1_ctg1,Length=211696,IDX=28>
+##contig=<ID=NW_022045576.1_ctg1,Length=33736,IDX=29>
+##contig=<ID=NW_022045577.1_ctg1,Length=357906,IDX=30>
+##contig=<ID=NW_022045578.1_ctg1,Length=45507,IDX=31>
+##contig=<ID=NW_022045579.1_ctg1,Length=20747,IDX=32>
+##contig=<ID=NW_022045580.1_ctg1,Length=60270,IDX=33>
+##contig=<ID=NW_022045581.1_ctg1,Length=24535,IDX=34>
+##contig=<ID=NW_022045582.1_ctg1,Length=33252,IDX=35>
+##contig=<ID=NW_022045583.1_ctg1,Length=34148,IDX=36>
+##contig=<ID=NW_022045584.1_ctg1,Length=151271,IDX=37>
+##contig=<ID=NW_022045585.1_ctg1,Length=79880,IDX=38>
+##contig=<ID=NW_022045586.1_ctg1,Length=28315,IDX=39>
+##contig=<ID=NW_022045587.1_ctg1,Length=52918,IDX=40>
+##contig=<ID=NW_022045588.1_ctg1,Length=86693,IDX=41>
+##contig=<ID=NW_022045589.1_ctg1,Length=222505,IDX=42>
+##contig=<ID=NW_022045591.1_ctg1,Length=77094,IDX=43>
+##contig=<ID=NW_022045592.1_ctg1,Length=33863,IDX=44>
+##contig=<ID=NW_022045593.1_ctg1,Length=21488,IDX=45>
+##contig=<ID=NW_022045594.1_ctg1,Length=24155,IDX=46>
+##contig=<ID=NW_022045595.1_ctg1,Length=48637,IDX=47>
+##contig=<ID=NW_022045596.1_ctg1,Length=46904,IDX=48>
+##contig=<ID=NW_022045597.1_ctg1,Length=114670,IDX=49>
+##contig=<ID=NW_022045598.1_ctg1,Length=31560,IDX=50>
+##contig=<ID=NW_022045599.1_ctg1,Length=56214,IDX=51>
+##contig=<ID=NW_022045600.1_ctg1,Length=38872,IDX=52>
+##contig=<ID=NW_022045601.1_ctg1,Length=90314,IDX=53>
+##contig=<ID=NW_022045602.1_ctg1,Length=253776,IDX=54>
+##contig=<ID=NW_022045603.1_ctg1,Length=24179,IDX=55>
+##contig=<ID=NW_022045604.1_ctg1,Length=70586,IDX=56>
+##contig=<ID=NW_022045605.1_ctg1,Length=36894,IDX=57>
+##contig=<ID=NW_022045606.1_ctg1,Length=76117,IDX=58>
+##contig=<ID=NW_022045608.1_ctg1,Length=47232,IDX=59>
+##contig=<ID=NW_022045610.1_ctg1,Length=49887,IDX=60>
+##contig=<ID=NW_022045611.1_ctg1,Length=57529,IDX=61>
+##contig=<ID=NW_022045612.1_ctg1,Length=44814,IDX=62>
+##contig=<ID=NW_022045614.1_ctg1,Length=44271,IDX=63>
+##contig=<ID=NW_022045615.1_ctg1,Length=21581,IDX=64>
+##contig=<ID=NW_022045616.1_ctg1,Length=27098,IDX=65>
+##contig=<ID=NW_022045617.1_ctg1,Length=59057,IDX=66>
+##contig=<ID=NW_022045618.1_ctg1,Length=20789,IDX=67>
+##contig=<ID=NW_022045619.1_ctg1,Length=62886,IDX=68>
+##contig=<ID=NW_022045621.1_ctg1,Length=48461,IDX=69>
+##contig=<ID=NW_022045622.1_ctg1,Length=73844,IDX=70>
+##contig=<ID=NW_022045623.1_ctg1,Length=47485,IDX=71>
+##contig=<ID=NW_022045624.1_ctg1,Length=22520,IDX=72>
+##contig=<ID=NW_022045625.1_ctg1,Length=54083,IDX=73>
+##contig=<ID=NW_022045626.1_ctg1,Length=35551,IDX=74>
+##contig=<ID=NW_022045627.1_ctg1,Length=151516,IDX=75>
+##contig=<ID=NW_022045628.1_ctg1,Length=684923,IDX=76>
+##contig=<ID=NW_022045629.1_ctg1,Length=348875,IDX=77>
+##contig=<ID=NW_022045630.1_ctg1,Length=32151,IDX=78>
+##contig=<ID=NW_022045631.1_ctg1,Length=286977,IDX=79>
+##contig=<ID=NW_022045633.1_ctg1,Length=229176,IDX=80>
+##contig=<ID=NW_022045634.1_ctg1,Length=784362,IDX=81>
+##contig=<ID=NW_022045635.1_ctg1,Length=234768,IDX=82>
+##contig=<ID=NW_022045636.1_ctg1,Length=460413,IDX=83>
+##contig=<ID=NW_022045637.1_ctg1,Length=35802,IDX=84>
+##contig=<ID=NW_022045638.1_ctg1,Length=49631,IDX=85>
+##contig=<ID=NW_022045639.1_ctg1,Length=164872,IDX=86>
+##contig=<ID=NW_022045640.1_ctg1,Length=241945,IDX=87>
+##contig=<ID=NW_022045641.1_ctg1,Length=28210,IDX=88>
+##bcftools_viewVersion=1.9-205-g446fb81+htslib-1.9-247-g6eacc77
+##bcftools_viewCommand=view -o merged.bcf -O b --threads 64 merged.gvcf; Date=Thu Dec 19 07:15:08 2019
+##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+##bcftools_viewCommand=view -s ^Sarah-2 -o Trained.bcf -O b --threads 64 merged.bcf; Date=Thu Dec 19 09:55:07 2019
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	Adelaide	Al	Alice	Aparima	Arab	Aranga	Ariki	Atareta	Attenborough	Aumaria	Awarua	Awhero	Barnard	Basil	Bella	Ben	Bill	Blades	Blake	Bluster_Murphy	Bonus	Boomer	Boss	Clout	Cyndy	Dobbie	Doc	Dusky	Egilsay	Ellie	Elliott	Elwin	Esperance	Evohe	Faulkner	Felix	Flossie	Fuchsia	George	Gertrude	Guapo	Gulliver	Gumboots	Gunner	Hakatere	Hananui	Hauturu	Heather	Henry	Hera	Hillary	Hine_Taumai	Hinemoa	Hoki	Hokonui	Horton	Hugh	Huhana	Hurihuri	Ian	Ihi	JEM	Jack	Jamieson	Jean	Jemma	Jester	Jimmy	Joe	Juanma	Kanawera	Kokoto	Komaru	Konini	Konini_3-4-16	Kotiu	Kuia	Kuihi	Kumi	Kura	Lee	Lionel	Lisa	Luke	Maggie	Mahli	Makorea	Manu	Marama	Margaret-Maree	Marian	Matangi	Merty	Merv	Mila	Millie	Moorhouse	Morehu	Moss	Mukeke	Ngatapa	Ninihi	Nog	Nora	Oraka	Ox	Paddy	Palmersan	Pearl	Percy	Piripi	Pounamu	Pura	Queenie	Ra	Rakiura	Ralph	Rangi	Richard_Henry	Rimu	Robbie	Roha	Ruapuke	Ruggedy	Ruth	Sandra	Sarah	Sass	Scratch	Sinbad	Sirocco	Smoko	Solstice	Stella	Stumpy	Sue	Suzanne	Taeatanga	Takitimu	Tamahou	Tau_Kuhurangi	Te_Atapo	Te_Awa	Te_Here	Te_Kingi	Tia	Tiaka	Titapu	Tiwai	Tiwhiri	Tohu	Toitiiti	Trevor	Tukaha	Tumeke	Tuterangi	Tutoko	Waa	Waihopai	Waikawa	Waynebo	Weheruatanga-o-te-po	Wendy	Wharetutu	Whiskas	Wiremu	Wolf	Yasmine	Zephyr

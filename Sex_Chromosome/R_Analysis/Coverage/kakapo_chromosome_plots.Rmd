@@ -1,0 +1,76 @@
+---
+title: "kakapo_chromosome_plots"
+author: "Jana"
+date: "November 25, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+setwd("/media/jana/Data/R_Analysis/Kakapo/FromMergedBCF")
+
+```
+##Max Depth Test
+I figured out what the maximum depth cut off should be by plotting the mean site depths of all 'known' chromosomes. I say known since there were a number of scaffolds not listed in the chromosome accession file from NCBI. From these data, I think a cut off of 250 is appropriate. 
+```{r depth test}
+depth_test <- read.delim("/media/jana/Data//R_analysis/FromMergedBCF/vcftools/chromos")
+all_sites_boxplot <- ggplot(depth_test, aes(x=CHROM, y=MEAN_DEPTH, color=CHROM)) + geom_boxplot()
+all_sites_boxplot + theme_light() 
+
+```
+
+##Reading in mean site depth for males and females on each chromosome.
+
+```{r data}
+#M5 <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/FromMergedBCF/vcftools/fellas.maxdepth50.homosites.chr5sexed.meandepth", header = TRUE, sep = "\t")
+MZ <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/FromMergedBCF/vcftools/Zchr_fellas_sexed", header = TRUE, sep = "\t")
+#M5ZW <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/FromMergedBCF/vcftools/fellas.maxdepth50.homosites.chr5ZWsexed.meandepth", header = TRUE, sep = "\t")
+
+#F5 <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/vcftools/FromMergedBCF/ladies.maxdepth50.homosites.chr5sexed.meandepth", header = TRUE, sep = "\t")
+FZ <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/FromMergedBCF/vcftools/Zchr_ladies_sexed", header = TRUE, sep = "\t")
+#FW <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/vcftools/FromMergedBCF/ladies.maxdepth50.homosites.chrWsexed.meandepth", header = TRUE, sep = "\t")
+#F5ZW <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/vcftools/FromMergedBCF/ladies.maxdepth50.homosites.chr5ZWsexed.meandepth", header = TRUE, sep = "\t")
+
+#FonlyW <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/vcftools/FromMergedBCF/Wsites_not_in_males", header = TRUE, sep = "\t")
+#FonlyW2 <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/vcftools/FromMergedBCF/Wsites_not_in_males_nonas", header = TRUE, sep = "\t")
+
+Z <- read.delim("C:/Users/Jana/Dropbox/Data/kakapo/R_Analysis/FromMergedBCF/vcftools/Zchr_sexed.meandepth", header = TRUE, sep = "\t")
+
+```
+
+## Plotting mean site depth - Males
+
+```{r Male mean site depth, echo=FALSE}
+#M5_depth_scatterplot <- ggplot(M5, aes(x=pos, y=mean_depth, color=chrom)) + geom_point(size = 0.25, alpha = 0.3)
+MZ_depth_scatterplot <- ggplot(MZ, aes(x=POS, y=MEAN_DEPTH, color=CHROM)) + geom_point(size = 1, colour = "dark blue", alpha = 0.3)
+#MW_depth_scatterplot <- ggplot(MW, aes(x=pos, y=mean_depth, color=chrom)) + geom_point(size = 0.25, alpha = 0.3)
+
+#M5_depth_scatterplot + theme_light()
+MZ_depth_scatterplot + theme_light()
+#MW_depth_scatterplot + theme_light()
+
+```
+
+## Plotting mean site depth - Feales
+
+```{r Female mean site depth, echo=FALSE}
+#F5_mean_depth_plot <- ggplot(F5, aes(x=pos, y=mean_depth, color=chrom)) + geom_point(size = 0.25, alpha = 0.3)
+FZ_mean_depth_plot <- ggplot(FZ, aes(x=POS, y=MEAN_DEPTH, color=CHROM)) + geom_point(size = 1, colour = "dark green", alpha = 0.3)
+#FW_mean_depth_plot <- ggplot(FonlyW, aes(x=pos, y=mean_depth, color=chrom)) + geom_point(size = 1, alpha = 0.3)
+
+#F5_mean_depth_plot + theme_light()
+FZ_mean_depth_plot + theme_light()
+#FW_mean_depth_plot + theme_light()
+
+```
+
+## Boxplot of sexes
+
+```{r chromosome comparisons, echo=FALSE}
+keybirds_plot <- ggplot(Z, aes(x=SEX, y=MEAN_DEPTH)) + geom_boxplot()
+keybirds_plot + theme_light()
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

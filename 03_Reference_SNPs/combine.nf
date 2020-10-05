@@ -15,7 +15,7 @@ process combineReads {
 	time '3h'
 	memory '6000 MB'
 	conda 'bioconda::samtools'
-	publishDir './alignments/'
+	publishDir './alignments/', mode: 'move'
 
 	input:
 		assembly

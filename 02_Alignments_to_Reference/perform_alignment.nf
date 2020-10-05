@@ -29,7 +29,7 @@ process mapReads {
   memory '48 GB'
   conda 'bioconda::bwa bioconda::samtools'
 //  storeDir './store/alignments/'
-  publishDir './results/alignments/'
+  publishDir './results/alignments/', mode: 'copy'
 
   // reads[0] reads[1] paired end
   // reads[2] are singles
