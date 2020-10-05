@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH -J whatshap
+#SBATCH --no-requeue
+#SBATCH -c 4
+#SBATCH -t 168:00:00
+#SBATCH --mem 64G
+#SBATCH -p ga_hugemem
+
+conda activate whatshap-dev
+whatshap phase -o phased_ped_indels.vcf \
+	--ped marissa.ped \
+	--indels \
+	--reference=../../NCBI_New_Reference.fasta \
+	./snps_maf_0.05_to_0.95_f_missing_0.2.vcf \
+	../../03_Reference_SNPs/alignments/*cram
+

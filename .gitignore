@@ -167,7 +167,6 @@ SF2
 *.ibc
 *.varP
 *.varQ
-misc_analyses
 *.paf
 *.fna.gz
 .ipynb_checkpoints
@@ -201,3 +200,19 @@ misc_analyses
 *.mean
 *.pickle
 *.idepth
+*_osx
+*exe
+*zip
+*dosages
+*haps
+*seg
+*params
+*_control
+*.ifreqburden
+clustrat_numclust*
+clustrat_log*
+gcta64
+test.phen
+*.data
+*.aux
+
