@@ -8,7 +8,8 @@
 #SBATCH --cpus-per-task         4
 
 ml purge
+#module load MAGMA/1.08-GCCcore-9.2.0
 module load MAGMA/1.07b-GCCcore-9.2.0
 
-magma --gene-results gene_owh2.genes.pro.raw --set-annot ./db/c2.cp.v6.2.symbols.gmt --out set_cp_6.2_owh2
+magma --gene-results ./output_magma/gene_clo_07.pro.raw --set-annot ./db/c2.cp.v6.2.symbols.gmt --out ./output_magma_db/set_clo_07
 

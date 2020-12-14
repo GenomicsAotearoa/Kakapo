@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #SBATCH --job-name=MANTA_male # job name (shows up in the queue)
-#SBATCH --time=15:00:00      # Walltime (HH:MM:SS)
+#SBATCH --time=04:00:00      # Walltime (HH:MM:SS)
 #SBATCH --partition=bigmem	#Using the big mem partition to try and perform joint calling
 #SBATCH --mem=460GB          # Memory in GB
 #SBATCH --cpus-per-task=72 # NeSI has 2 logical CPUs for each physical core
