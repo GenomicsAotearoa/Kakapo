@@ -1,6 +1,5 @@
 #!/usr/bin/env nextflow
 
-
 /*
  * This script by Joseph Guhlin
  * joseph.guhlin@gmail.com
