@@ -1,14 +1,14 @@
-# Kakapo Genome Data
+# Kākāpō Genome Data
 
-[NCBI Kakapo Taxonomy ID](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=57251)
+[NCBI Kākāpō Taxonomy ID](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=57251)
 
 ## Genome Availability
-The Kakapo genome is published through the Vertebrate Genomes Project and is available from NCBI:
-[Kakapo Genome 7 Sept 2018](https://www.ncbi.nlm.nih.gov/assembly/GCF_004027225.2/)
+The Kākāpō genome is published through the Vertebrate Genomes Project and is available from NCBI:
+[Kākāpō Genome 7 Sept 2018](https://www.ncbi.nlm.nih.gov/assembly/GCF_004027225.2/)
 The Primary assembly is used in these scripts.
 
 ## Other Data Availability
-Kakapo data is available through the DOC and it is possible to request it here: https://data.agdr.org.nz/
+Kākāpō data is available through the DOC and it is possible to request it here: https://data.agdr.org.nz/
 
 # Methods
 
