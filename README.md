@@ -1,19 +1,14 @@
-# Kakapo Genome Data
+# Kākāpō Genome Data
 
-[NCBI Kakapo Taxonomy ID](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=57251)
+[NCBI Kākāpō Taxonomy ID](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=57251)
 
 ## Genome Availability
-The Kakapo genome is published through the Vertebrate Genomes Project and is available here:
-[Kakapo Genome 7 Sept 2018](https://vgp.github.io/genomeark/Strigops_habroptilus/)
-The Primary assembly is used in these scripts
+The Kākāpō genome is published through the Vertebrate Genomes Project and is available from NCBI:
+[Kākāpō Genome 7 Sept 2018](https://www.ncbi.nlm.nih.gov/assembly/GCF_004027225.2/)
+The Primary assembly is used in these scripts.
 
 ## Other Data Availability
-Kakapo data is available through the DOC. This repository is for those with access to the data.
-
-## Quick Note
-**Many of the tools here may be moved to git submodules, as I am trying to make sure they are reusable as much as possible**
-NextFlow (the pipeline tool I am using) lets you work directly from git repos so they will likely be moving into their own in the near future.
---Joseph
+Kākāpō data is available through the DOC and it is possible to request it here: https://data.agdr.org.nz/
 
 # Methods
 
