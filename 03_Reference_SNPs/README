@@ -1,0 +1,5 @@
+missing_regions3 were run on a newer version of freebayes compiled from source
+
+version:  v1.3.1-12-g06fe585-dirty
+
+everything else was run on version:  v1.2.0-dirty from bioconda repository

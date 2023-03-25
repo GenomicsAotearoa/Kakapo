@@ -215,4 +215,9 @@ gcta64
 test.phen
 *.data
 *.aux
-
+*.roh
+figures/circos-tutorials-0.67/
+*.fst
+.clj-kondo*
+.lsp*
+10_de_novo_assemblies
