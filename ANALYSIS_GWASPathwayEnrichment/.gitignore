@@ -1,0 +1,5 @@
+*.obo
+*.parquet
+*.annotations
+*.hits
+*.seed_orthologs
