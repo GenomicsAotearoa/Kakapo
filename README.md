@@ -1,3 +1,6 @@
+# Now Published
+[Species-wide genomics of kākāpō provides tools to accelerate recovery](https://www.nature.com/articles/s41559-023-02165-y)
+
 # Kākāpō Genome Data
 
 [NCBI Kākāpō Taxonomy ID](https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=57251)
