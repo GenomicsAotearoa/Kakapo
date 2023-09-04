@@ -28,29 +28,4 @@ QC Results are be available on [Google Drive](https://drive.google.com/open?id=1
 BWA Mapping to align each lane of sequencing to the reference genome. Samples are renamed to the bird name + lane number. MultiQC report generated for alignment statistics is available on Google Drive.
 
 ## 03_Reference_SNPs
-FreeBayes, DeepVariant, and ... one more.
-
-
-## 10_de_novo_assemblies
-Early stages of testing....
-
-## Other Analyses
-TBD
-
-# Scripts
-
-# Dependencies
-* [AdapterRemovalV2](https://github.com/MikkelSchubert/adapterremoval)
-* [Funannotate](https://github.com/nextgenusfs/funannotate) 1.5.1-439a664
-  * RepeatModeler
-  * RepeatMasker
-  * [Augustus](https://github.com/Gaius-Augustus/Augustus) 3.3.2
-* GeneValidator
-* Nextflow
-  * clojure
-  * perl
-  * diamond
-  * samtools
-  * mcl
-  * Augustus 3.3.2
-  * EMBOSS
+FreeBayes, DeepVariant, and GATK.
